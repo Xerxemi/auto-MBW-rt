@@ -1,0 +1,102 @@
+[HillClimbingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+
+[StochasticHillClimbingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+p_accept = 0.1
+
+[RepulsingHillClimbingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+repulsion_factor = 5
+
+[SimulatedAnnealingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+start_temp = 1
+annealing_rate = 0.97
+
+[DownhillSimplexOptimizer]
+alpha = 1
+gamma = 2
+beta = 0.5
+sigma = 0.5
+
+[RandomSearchOptimizer]
+
+[GridSearchOptimizer]
+step_size = 1
+
+[RandomRestartHillClimbingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+n_iter_restart = 10
+
+[RandomAnnealingOptimizer]
+epsilon = 0.03
+distribution = "normal"
+n_neighbours = 3
+start_temp = 10
+annealing_rate = 0.98
+
+[PowellsMethod]
+iters_p_dim = 10
+
+[PatternSearch]
+n_positions = 4
+pattern_size = 0.25
+reduction = 0.9
+
+[ParallelTemperingOptimizer]
+population = 10
+n_iter_swap = 10
+rand_rest_p = 0
+
+[ParticleSwarmOptimizer]
+population = 10
+inertia = 0.5
+cognitive_weight = 0.5
+social_weight = 0.5
+rand_rest_p = 0
+
+[SpiralOptimization]
+population = 10
+decay_rate = 0.99
+
+[EvolutionStrategyOptimizer]
+population = 10
+mutation_rate = 0.7
+crossover_rate = 0.3
+rand_rest_p = 0
+
+[LipschitzOptimizer]
+max_sample_size = 10000000
+sampling = "{'random': 1000000}"
+
+[DirectAlgorithm]
+
+[BayesianOptimizer]
+xi = 0.3
+max_sample_size = 10000000
+sampling = "{'random': 1000000}"
+rand_rest_p = 0
+
+[TreeStructuredParzenEstimators]
+gamma_tpe = 0.2
+max_sample_size = 10000000
+sampling = "{'random': 1000000}"
+rand_rest_p = 0
+
+[ForestOptimizer]
+xi = 0.3
+tree_regressor = "extra_tree"
+max_sample_size = 10000000
+sampling = "{'random': 1000000}"
+rand_rest_p = 0

@@ -1,0 +1,25 @@
+#autombw_payloads_1, #autombw_payloads_2, #autombw_payloads_3{
+    padding: 0;
+}
+
+#autombw_payloads_1 > label > div, #autombw_payloads_2 > label > div, #autombw_payloads_3 > label > div{
+    min-height: 7.1em;
+}
+
+#autombw_search_type_A_1, #autombw_search_type_B_1, #autombw_classifiers_1, #autombw_tally_type_1,
+#autombw_search_type_A_2, #autombw_search_type_B_2, #autombw_classifiers_2, #autombw_tally_type_2,
+#autombw_search_type_A_3, #autombw_search_type_B_3, #autombw_classifiers_3, #autombw_tally_type_3{
+    padding: 0.3em !important;
+}
+
+#autombw_unet_vis{
+    min-height: 20em;
+}
+
+#autombw_gallery{
+    min-height: 35em;
+}
+
+#autombw_spacer{
+    height: 100%
+}
