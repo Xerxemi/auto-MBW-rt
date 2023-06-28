@@ -32,4 +32,4 @@ class CardDealer():
                 for prompt, negative_prompt in zip(generator.generate(prompt, n_iter), generator.generate(negative_prompt, n_iter)):
                     payloads.append({**copy.deepcopy(args), "prompt": prompt, "negative_prompt": negative_prompt, "n_iter": 1})
                 self.payloads.update({payload_path: payloads})
-        return self.payloads[payload_path]
+        return copy.deepcopy(self.payloads[payload_path])

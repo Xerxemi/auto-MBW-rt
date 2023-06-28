@@ -9,7 +9,7 @@
 #autombw_search_type_A_1, #autombw_search_type_B_1, #autombw_classifiers_1, #autombw_tally_type_1,
 #autombw_search_type_A_2, #autombw_search_type_B_2, #autombw_classifiers_2, #autombw_tally_type_2,
 #autombw_search_type_A_3, #autombw_search_type_B_3, #autombw_classifiers_3, #autombw_tally_type_3{
-    padding: 0.3em !important;
+    padding: 0.15em !important;
 }
 
 #autombw_unet_vis{

@@ -55,3 +55,6 @@ if os.path.isfile(script_path):
         raise Exception("autoMBW [error]: runtime-block-merge extension missing injector. MERGING WILL NOT WORK - https://github.com/Xynonners/sd-webui-runtime-block-merge")
 else:
     raise Exception("autoMBW [error]: runtime-block-merge extension not found. MERGING WILL NOT WORK - https://github.com/Xynonners/sd-webui-runtime-block-merge")
+
+if not os.path.isdir(os.path.join(__extensions__, msgspec.toml.decode(open(config_path, "rb").read())["extension_counterpart_lora"])):
+    raise Exception("autoMBW [error]: lora-block-weight extension not found. LoRA merging will not work - https://github.com/hako-mikan/sd-webui-lora-block-weight")

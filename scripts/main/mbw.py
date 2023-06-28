@@ -85,10 +85,10 @@ def on_ui_tabs(main_block):
 
     search_types = shared.HyperOptimizers.optimizers
 
-    if not shared.cmd_opts.gradio_queue:
-        print("\nautoMBW [info]: --gradio-queue not found in COMMANDLINE_ARGS | live gallery [disabled].\n")
+    if shared.cmd_opts.no_gradio_queue:
+        print("\nautoMBW [info]: --no-gradio-queue found in COMMANDLINE_ARGS | live gallery [disabled].\n")
     else:
-        print("\nautoMBW [info]: --gradio-queue found in COMMANDLINE_ARGS | live gallery [enabled].\n")
+        print("\nautoMBW [info]: --no-gradio-queue not found in COMMANDLINE_ARGS | live gallery [enabled].\n")
 
     display_images = None
     def get_display_images():
@@ -105,7 +105,7 @@ def on_ui_tabs(main_block):
                     with gr.Column(min_width=150):
                         enabled_1 = gr.Checkbox(label="Enabled", value=True)
                         chk_save_output_files_1 = gr.Checkbox(label="Save Output Files", value=False)
-                        sl_search_type_balance_1 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.01, value=0)
+                        sl_search_type_balance_1 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
                         payloads_1 = gr.Dropdown(label="Payloads", choices=discovered_payloads, multiselect=True, elem_id="autombw_payloads_1")
                 with gr.Row():
@@ -116,7 +116,7 @@ def on_ui_tabs(main_block):
                         dropdown_classifiers_1 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_1")
                         dropdown_tally_type_1 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[2], elem_id="autombw_tally_type_1")
                     with gr.Column():
-                        sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=1, maximum=1000, step=1, value=250)
+                        sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                         sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
                         sl_test_grouping_1 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
                         sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
@@ -136,7 +136,7 @@ def on_ui_tabs(main_block):
                     with gr.Column(min_width=150):
                         enabled_2 = gr.Checkbox(label="Enabled", value=False)
                         chk_save_output_files_2 = gr.Checkbox(label="Save Output Files", value=False)
-                        sl_search_type_balance_2 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.01, value=0)
+                        sl_search_type_balance_2 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
                         payloads_2 = gr.Dropdown(label="Payloads", choices=discovered_payloads, multiselect=True, elem_id="autombw_payloads_2")
                 with gr.Row():
@@ -147,7 +147,7 @@ def on_ui_tabs(main_block):
                         dropdown_classifiers_2 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_2")
                         dropdown_tally_type_2 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[2], elem_id="autombw_tally_type_2")
                     with gr.Column():
-                        sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=1, maximum=1000, step=1, value=250)
+                        sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                         sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
                         sl_test_grouping_2 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
                         sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
@@ -167,7 +167,7 @@ def on_ui_tabs(main_block):
                     with gr.Column(min_width=150):
                         enabled_3 = gr.Checkbox(label="Enabled", value=False)
                         chk_save_output_files_3 = gr.Checkbox(label="Save Output Files", value=False)
-                        sl_search_type_balance_3 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.01, value=0)
+                        sl_search_type_balance_3 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
                         payloads_3 = gr.Dropdown(label="Payloads", choices=discovered_payloads, multiselect=True, elem_id="autombw_payloads_3")
                 with gr.Row():
@@ -178,7 +178,7 @@ def on_ui_tabs(main_block):
                         dropdown_classifiers_3 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_3")
                         dropdown_tally_type_3 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[2], elem_id="autombw_tally_type_3")
                     with gr.Column():
-                        sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=1, maximum=1000, step=1, value=250)
+                        sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                         sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
                         sl_test_grouping_3 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
                         sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
@@ -224,6 +224,7 @@ def on_ui_tabs(main_block):
                                         chk_enable_shared_memory = gr.Checkbox(label="Pass Shared Memory (requires consistent pass params)", value=False)
                                         experimental_range_checkbox = gr.Checkbox(label='Enable Experimental Range', value=False)
                                         chk_enable_clamping = gr.Checkbox(label="Search Space Clamping", value=False)
+                                        chk_enable_lora_merging = gr.Checkbox(label="LoRA Merging", value=False)
                             with gr.Column():
                                 force_cpu_checkbox = gr.Checkbox(label='Force CPU (Max Precision)', value=True, interactive=True)
                                 output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value="Max Precision", type="value", interactive=True)
@@ -271,18 +272,24 @@ def on_ui_tabs(main_block):
                         cu_M_00 = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="CU_M00", value=1, elem_id="autombw_m00_cu", visible=False)
             with gr.Column():
                 chks_out, sliders_out, clamp_lower_out, clamp_upper_out = [], [], [], []
-                for num in range(0, 12):
+                for num in reversed(range(0, 12)):
                     with gr.Row(variant="panel"):
                         chks_out.append(gr.Checkbox(label="OUT" + format(num, "0>2"), value=True, elem_id="autombw_out" + format(num, "0>2")))
                         with gr.Column(variant="compact"):
                             sliders_out.append(gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="OUT" + format(num, "0>2"), value=0, elem_id="autombw_out" + format(num, "0>2") + "_sl"))
                             clamp_lower_out.append(gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="CL_OUT" + format(num, "0>2"), value=0, elem_id="autombw_out" + format(num, "0>2") + "_cl", visible=False))
                             clamp_upper_out.append(gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label="CU_OUT" + format(num, "0>2"), value=1, elem_id="autombw_out" + format(num, "0>2") + "_cu", visible=False))
+                chks_out.reverse()
+                sliders_out.reverse()
+                clamp_lower_out.reverse()
+                clamp_upper_out.reverse()
 
     chks = chks_in + [chk_M_00] + [chk_OUT] + chks_out + [chk_TIME_EMBED]
     sliders = sliders_in + [sl_M_00] + [sl_OUT] + sliders_out + [sl_TIME_EMBED]
     clamp_lower = clamp_lower_in + [cl_M_00] + [cl_OUT] + clamp_lower_out + [cl_TIME_EMBED]
     clamp_upper = clamp_upper_in + [cu_M_00] + [cu_OUT] + clamp_upper_out + [cu_TIME_EMBED]
+
+    lora_disabled = [0, 3, 6, 9, 10, 11, 13, 14, 15, 16, 26]
 
     params = {
         "dropdown_model_A": dropdown_model_A,
@@ -291,6 +298,7 @@ def on_ui_tabs(main_block):
         "txt_multi_merge": txt_multi_merge,
         "chk_enable_shared_memory": chk_enable_shared_memory,
         "chk_enable_clamping": chk_enable_clamping,
+        "chk_enable_lora_merging": chk_enable_lora_merging,
         "force_cpu_checkbox": force_cpu_checkbox,
         "experimental_range_checkbox": experimental_range_checkbox,
         "output_mode_radio": output_mode_radio,
@@ -376,6 +384,7 @@ def on_ui_tabs(main_block):
             model_B = args[params["dropdown_model_B"]]
             model_O = args[params["txt_model_O"]]
             multi_merge = args[params["txt_multi_merge"]]
+            lora = args[params["chk_enable_lora_merging"]]
 
             print( "\n #### AutoMBW - V2 ####")
 
@@ -399,6 +408,17 @@ def on_ui_tabs(main_block):
                 multi_model_B = [model_B]
                 multi_model_O = [model_O.strip()]
 
+            def lora_sanitize(weights, search_space=False):
+                if lora:
+                    if search_space:
+                        disabled = [str(idx) for idx in lora_disabled]
+                        zero = [0]
+                    else:
+                        disabled = lora_disabled
+                        zero = 0
+                    for idx in disabled:
+                        weights[idx] = zero
+
             weights = []
             for interface in sliders:
                 weights.append(float(args[interface]))
@@ -408,6 +428,9 @@ def on_ui_tabs(main_block):
             cu_weights = []
             for interface in clamp_upper:
                 cu_weights.append(float(args[interface]))
+            #sanitize for lora (disabled weights)
+            # for weight_set in [weights, cl_weights, cu_weights]:
+            #     lora_sanitize(weight_set)
 
             # start testing stuff
             def hyper_score(localargs):
@@ -434,8 +457,9 @@ def on_ui_tabs(main_block):
                 tally_type = localargs.pass_through["tally_type"]
                 save_output_files = localargs.pass_through["save_output_files"]
                 model_B = localargs.pass_through["model_B"]
+                lora = localargs.pass_through["lora"]
 
-                score, images = adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, testweights, model_B)
+                score, images = adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, testweights, model_B, lora=lora)
                 display_images = images
 
                 return score
@@ -455,7 +479,7 @@ def on_ui_tabs(main_block):
                     model_O = "autoMBW_" + os.path.splitext(model_A)[0] +"_" + os.path.splitext(model_B)[0]
 
                 print("\n ----------AUTOMERGE START----------\n    modelA: " + str(model_A) + "\n    modelB: " + str(model_B) + "\n    modelO: " + str(model_O) + "\n")
-                handle_model_load(model_A, model_B, args[params["force_cpu_checkbox"]], weights)
+                handle_model_load(model_A, model_B, args[params["force_cpu_checkbox"]], weights, lora=lora)
 
                 memory_warm_start = None
                 for current_pass in range(passes):
@@ -481,7 +505,8 @@ def on_ui_tabs(main_block):
                                 else:
                                     search_space.update({str(idx): [*np.round(np.linspace(lower, upper, num=args[pass_params["sl_test_interval"]]+1), 8)]})
                             else:
-                                search_space.update({str(idx): [args[sliders[idx]]]})
+                                search_space.update({str(idx): [float(args[sliders[idx]])]})
+                    # lora_sanitize(search_space, search_space=True)
 
                     warm_start = [{str(k): v for k, v in enumerate(weights)}] if args[pass_params["chk_warm_start"]] else []
                     early_stopping = {"n_iter_no_change": args[pass_params["sl_n_iter_no_change"]], "tol_abs": args[pass_params["sl_tol_abs"]], "tol_rel": args[pass_params["tol_rel"]]} if args[pass_params["chk_enable_early_stop"]] else None
@@ -495,13 +520,15 @@ def on_ui_tabs(main_block):
                         "tally_type": args[pass_params["dropdown_tally_type"]],
                         "save_output_files": args[pass_params["chk_save_output_files"]],
                         "model_A": model_A,
-                        "model_B": model_B
+                        "model_B": model_B,
+                        "lora": lora
                     }
 
                     #optimizer strategy to combine 2 opts
-                    if args[pass_params["sl_search_type_balance"]] != 0 or args[pass_params["sl_search_type_balance"]] != 1:
+                    #we set search_iterations min to 10 and step of search_type_balance to 0.1 since hyperactive/pandas has an odd tolerance to low iterations during use of dual optimizers
+                    if args[pass_params["sl_search_type_balance"]] != 0 and args[pass_params["sl_search_type_balance"]] != 1:
                         opt_strat = CustomOptimizationStrategy()
-                        opt_strat.add_optimizer(search_types[args[pass_params["dropdown_search_type_A"]]], duration=round(1-args[pass_params["sl_search_type_balance"]], 2))
+                        opt_strat.add_optimizer(search_types[args[pass_params["dropdown_search_type_A"]]], duration=round(1-args[pass_params["sl_search_type_balance"]], 1))
                         opt_strat.add_optimizer(search_types[args[pass_params["dropdown_search_type_B"]]], duration=args[pass_params["sl_search_type_balance"]])
                     elif args[pass_params["sl_search_type_balance"]] == 0:
                         opt_strat = search_types[args[pass_params["dropdown_search_type_A"]]]
@@ -569,15 +596,18 @@ def on_ui_tabs(main_block):
                     )
                     history.write_history()
 
-                save_checkpoint(args[params["output_mode_radio"]], args[params["position_id_fix_radio"]], args[params["output_format_radio"]], model_O, args[params["output_recipe_checkbox"]], weights)
+                save_checkpoint(args[params["output_mode_radio"]], args[params["position_id_fix_radio"]], args[params["output_format_radio"]], model_O, args[params["output_recipe_checkbox"]], weights, model_A, model_B, lora=lora)
 
             print("autoMBW [info]: merge completed.")
             return gr.update(value=f"merge completed.<br>")
         except:
             raise
         finally:
-            disable_injection()
-            print("autoMBW [info]: injection disabled (hopefully).")
+            if lora:
+                print("autoMBW [info]: LoRA does not use injection - skipping injection disable.")
+            else:
+                disable_injection()
+                print("autoMBW [info]: injection disabled (hopefully).")
 
 
     btn_do_mbw.click(
@@ -667,10 +697,10 @@ def on_ui_tabs(main_block):
     chk_enable_clamping.change(fn=on_change_clamping_btn, inputs=[chk_enable_clamping], outputs=[btn_apply_block_weight_from_txt_cl, btn_apply_block_weight_from_txt_cu])
 
     def on_change_force_cpu(force_cpu_flag):
-        if not force_cpu_flag:
-            return gr.update(choices=["Runtime Snapshot"], value="Runtime Snapshot")
-        else:
+        if force_cpu_flag:
             return gr.update(choices=["Max Precision", "Runtime Snapshot"], value="Max Precision")
+        else:
+            return gr.update(choices=["Runtime Snapshot"], value="Runtime Snapshot")
 
     force_cpu_checkbox.change(fn=on_change_force_cpu, inputs=[force_cpu_checkbox], outputs=[output_mode_radio])
 
@@ -692,6 +722,39 @@ def on_ui_tabs(main_block):
     chk_enable_early_stop_2.change(fn=on_change_early_stop, inputs=[chk_enable_early_stop_2], outputs=[sl_n_iter_no_change_2, sl_tol_abs_2, sl_tol_rel_2])
     chk_enable_early_stop_3.change(fn=on_change_early_stop, inputs=[chk_enable_early_stop_3], outputs=[sl_n_iter_no_change_3, sl_tol_abs_3, sl_tol_rel_3])
 
+    def on_change_lora_merging(lora_merging_flag):
+        if lora_merging_flag:
+            return gr.update(choices=[*lora.available_lora_aliases.keys()])
+        else:
+            return gr.update(choices=sd_models.checkpoint_tiles())
+
+    lora_disable_opts = [force_cpu_checkbox, output_mode_radio, position_id_fix_radio, output_recipe_checkbox]
+    lora_disable_chks = [chks[idx] for idx in lora_disabled]
+    lora_disable_sliders = [sliders[idx] for idx in lora_disabled]
+
+    def on_change_lora_merging_opts(lora_merging_flag):
+        if lora_merging_flag:
+            return [gr.update(interactive=False, visible=False) for _ in range(len(lora_disable_opts))]
+        else:
+            return [gr.update(interactive=True, visible=True) for _ in range(len(lora_disable_opts))]
+
+    def on_change_lora_merging_chks(lora_merging_flag):
+        if lora_merging_flag:
+            return [gr.update(interactive=False, value=False) for _ in range(len(lora_disable_chks))]
+        else:
+            return [gr.update(interactive=True, value=True) for _ in range(len(lora_disable_chks))]
+
+    def on_change_lora_merging_sliders(lora_merging_flag):
+        if lora_merging_flag:
+            return [gr.update(interactive=False, value=0) for _ in range(len(lora_disable_sliders))]
+        else:
+            return [gr.update(interactive=True, value=0) for _ in range(len(lora_disable_sliders))]
+
+    chk_enable_lora_merging.change(fn=on_change_lora_merging, inputs=[chk_enable_lora_merging], outputs=[dropdown_model_B])
+    chk_enable_lora_merging.change(fn=on_change_lora_merging_opts, inputs=[chk_enable_lora_merging], outputs=lora_disable_opts)
+    chk_enable_lora_merging.change(fn=on_change_lora_merging_chks, inputs=[chk_enable_lora_merging], outputs=lora_disable_chks)
+    chk_enable_lora_merging.change(fn=on_change_lora_merging_sliders, inputs=[chk_enable_lora_merging], outputs=lora_disable_sliders)
+
     # def on_change_search_type_balance(balance):
     #     if balance == 0:
     #         return gr.update(interactive=True), gr.update(interactive=False)
@@ -703,3 +766,6 @@ def on_ui_tabs(main_block):
     # sl_search_type_balance_1.release(fn=on_change_search_type_balance, inputs=[sl_search_type_balance_1], outputs=[dropdown_search_type_A_1, dropdown_search_type_B_1])
     # sl_search_type_balance_2.release(fn=on_change_search_type_balance, inputs=[sl_search_type_balance_2], outputs=[dropdown_search_type_A_2, dropdown_search_type_B_2])
     # sl_search_type_balance_3.release(fn=on_change_search_type_balance, inputs=[sl_search_type_balance_3], outputs=[dropdown_search_type_A_3, dropdown_search_type_B_3])
+
+    #fix for gradio blank slider shenanigans
+    main_block.load(fn=on_change_test_base, inputs=[sl_test_base], outputs=sliders)
