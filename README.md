@@ -17,13 +17,21 @@ Big thanks to bbc-mc for the original codebase and the start of this merge parad
 
 You can find it here: https://github.com/bbc-mc/sdweb-merge-block-weighted-gui
 
-**MERGING BACKEND**: Huge thanks to ashen for creating https://github.com/ashen-sensored/sd-webui-runtime-block-merge
+**MERGING BACKEND**: Huge thanks to ashen
 
-**LORA BACKEND**: Huge thanks to hako-mikan for creating https://github.com/hako-mikan/sd-webui-lora-block-weight
+https://github.com/ashen-sensored/sd-webui-runtime-block-merge
 
-**LORA BACKEND (SOLID)**: Huge thanks to hako-mikan for creating https://github.com/hako-mikan/sd-webui-supermerger
+**LORA BACKEND**: Huge thanks to hako-mikan
 
-**OPTIMIZER LIB**: Massive thanks to SimonBlanke for creating https://github.com/SimonBlanke/Hyperactive
+https://github.com/hako-mikan/sd-webui-lora-block-weight
+
+**LORA BACKEND (SOLID)**: Huge thanks to hako-mikan
+
+https://github.com/hako-mikan/sd-webui-supermerger
+
+**OPTIMIZER LIB**: Massive thanks to SimonBlanke
+
+https://github.com/SimonBlanke/Hyperactive
 
 ----
 
