@@ -5,6 +5,7 @@ import torch.nn as nn
 import numpy as np
 import clip
 import os
+import math
 
 state_name = "ava+logos-l14-linearMSE.pth"
 dirname = os.path.dirname(__file__)
@@ -49,8 +50,13 @@ def get_image_features(image, device=device, model=clip_model, preprocess=clip_p
     image_features = image_features.cpu().detach().numpy()
     return image_features
 
-def score(image, prompt=""):
-    image_features = get_image_features(image)
-    score = predictor(torch.from_numpy(image_features).to(device).float())
-    return score.item()
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
 
+def score(image, prompt="", reverse=False):
+    image_features = get_image_features(image)
+    score_origin = predictor(torch.from_numpy(image_features).to(device).float()).item() - 5.6
+    if reverse:
+        score_origin = score_origin*-1
+    score = sigmoid(score_origin)
+    return score

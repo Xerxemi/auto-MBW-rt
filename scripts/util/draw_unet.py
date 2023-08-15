@@ -1,25 +1,25 @@
-import io, time, copy
+# import io, time, copy
 import base64
-import statistics
+# import statistics
 import pygal
 from pygal.util import alter, decorate
-from pygal.style import (
-        DefaultStyle,
-        DarkStyle,
-        NeonStyle,
-        DarkSolarizedStyle,
-        LightSolarizedStyle,
-        LightStyle,
-        CleanStyle,
-        RedBlueStyle,
-        DarkColorizedStyle,
-        LightColorizedStyle,
-        TurquoiseStyle,
-        LightGreenStyle,
-        DarkGreenStyle,
-        DarkGreenBlueStyle,
-        BlueStyle
-)
+# from pygal.style import (
+#         DefaultStyle,
+#         DarkStyle,
+#         NeonStyle,
+#         DarkSolarizedStyle,
+#         LightSolarizedStyle,
+#         LightStyle,
+#         CleanStyle,
+#         RedBlueStyle,
+#         DarkColorizedStyle,
+#         LightColorizedStyle,
+#         TurquoiseStyle,
+#         LightGreenStyle,
+#         DarkGreenStyle,
+#         DarkGreenBlueStyle,
+#         BlueStyle
+# )
 
 x_labels_vertical = [
     "IN0", "IN1", "IN2", "IN3", "IN4", "IN5", "IN6", "IN7", "IN8", "IN9", "IN10", "IN11",
@@ -243,25 +243,28 @@ class DataPlot():
                 for point in serie:
                     point["color"] = self.return_color(self.normalize_score(stored_score), style)
 
-        self.data.append(([{"value": weight, "color": self.return_color(self.normalize_score(score), style)} for weight in weights], score))
+        #shift experimental range range up by 1 since pygal doesn't like negative values'
+        chart_add = 1 if self.experimental_range else 0
+        self.data.append(([{"value": weight + chart_add, "color": self.return_color(self.normalize_score(score), style)} for weight in weights], score))
 
         css = ['file://style.css', 'file://graph.css', 'inline:#activate-serie-0 {transform: translate(0, 21px);}', 'inline:#activate-serie-1 {transform: translate(0, -21px);}']
         for num in range(len(self.data)):
             css.append(f'inline:g.plot.overlay g.serie-{2+num}, g.graph g.serie-{2+num} ' + '{transform: translate(31px,0);}')
             css.append(f'inline:#activate-serie-{2+num} ' + '{display: none;}')
 
-        chart_range = (-1, 2) if self.experimental_range else (0, 1)
+        chart_range = (0, 3) if self.experimental_range else (0, 1)
         chart = LineBar(css=css, stroke=False, style=style, height=300, width=1820, range=chart_range, secondary_range=chart_range, show_y_labels=show_labels)
         # chart.x_labels = x_labels_vertical
         chart.x_labels = x_labels_vertical_nat
 
-        chart.add("B", [{"value": weight, 'ci': {'low': 0, 'high': 1}} for weight in weights], allow_interruptions=False, show_dots=True, dots_size=5, rounded_bars=10, plotas="bar")
-        chart.add("A", [1 - weight for weight in weights], allow_interruptions=True, show_dots=True, dots_size=5, rounded_bars=10, plotas="bar")
+        chart.add("B", [{"value": weight + chart_add, 'ci': {'low': chart_range[0], 'high': chart_range[1]}} for weight in weights], allow_interruptions=False, show_dots=True, dots_size=5, rounded_bars=10, plotas="bar")
+        chart.add("A", [1 - weight + chart_add for weight in weights], allow_interruptions=True, show_dots=True, dots_size=5, rounded_bars=10, plotas="bar")
 
         data_length = len(self.data)
         for idx, (serie, stored_score) in enumerate(self.data):
             #stroke: , stroke=True, stroke_style={'dasharray': '3, 6'}
-            chart.add(str(idx+1), serie, allow_interruptions=True, dots_size=round((3-self.normalize_score(stored_score))*3), plotas="line")
+            #dots_size=round((3-self.normalize_score(stored_score))*3)
+            chart.add(str(idx+1), serie, allow_interruptions=True, dots_size=9, plotas="line")
 
         # before = time.time()
         data = chart.render(pretty_print=True)

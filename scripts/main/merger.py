@@ -1,18 +1,18 @@
-import os, sys
+import os #, sys
 from collections import deque
 import threading
-import requests
+# import requests
 import msgspec
 
 import datetime
 import statistics
 import numpy as np
-import gradio as gr
+# import gradio as gr
 
-from modules import shared, devices
+from modules import shared #, devices
 from modules.scripts import basedir
 
-from scripts.util.webui_api import txt2img
+from scripts.util.webui_api import txt2img, refresh_models, set_model
 from scripts.util.util_funcs import change_dir, extend_path
 from scripts.util.draw_unet import DataPlot
 
@@ -34,8 +34,9 @@ with extend_path(os.path.join(__extensions__, msgspec.toml.decode(open(config_pa
 def handle_model_load(modelA, modelB, force_cpu_checkbox, slALL, lora=False):
     global plot
     plot = DataPlot()
-    payload = {"sd_model_checkpoint": modelA}
-    print(requests.post(url=f'{url}/sdapi/v1/options', json=payload))
+    #not sure if this is necessary
+    refresh_models()
+    set_model(modelA)
     if not lora:
         shared.UNBMSettingsInjector.weights = slALL
         shared.UNBMSettingsInjector.modelB = modelB
@@ -63,7 +64,7 @@ def lora_conv(slALL):
     return slALL_lora
 
 # main merging function
-def adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, slALL, modelB, lora=False):
+def adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, slALL, modelB, lora=False, seedplus=0):
     _weights_lora = ""
     if lora:
         _weights_lora = ','.join([str(i) for i in lora_conv(slALL)])
@@ -82,14 +83,21 @@ def adjust_weights_score(payload_paths, classifier, tally_type, save_output_file
     images_prompt = []
     for payload_path in payload_paths:
         for args in dealer.wildcard_payload(payload_path):
+            #we don't want lora to leak into the image-reward scoring prompt, though maybe adding modelB would be good?
+            prompt = args["prompt"]
             if lora:
                 args["prompt"] = args["prompt"] + f'\n<lora:{modelB}:1:{_weights_lora}>'
+            #this is fine since webui_api layer discards all extra payload arguments it doesn't use
+            # reverse =  args["reverse_scoring"]
+            reverse = False
+            #I feel dirty just doing this
+            args["seed"] = args["seed"] + seedplus
             for image in txt2img(**args):
-                images_prompt.append((image, args["prompt"],))
+                images_prompt.append((image, prompt, reverse,))
 
     imagescores = []
-    for (image, prompt) in images_prompt:
-        score = classifier.score(image, prompt=prompt)
+    for (image, prompt, reverse) in images_prompt:
+        score = classifier.score(image, prompt=prompt, reverse=reverse)
         imagescores.append(score)
 
     if tally_type == "Arithmetic Mean":
@@ -102,6 +110,12 @@ def adjust_weights_score(payload_paths, classifier, tally_type, save_output_file
         testscore = np.sqrt(np.mean(np.array(imagescores)**2))
     elif tally_type == "Cubic Mean":
         testscore = np.cbrt(np.mean(np.array(imagescores)**3))
+    elif tally_type == "A/G Mean":
+        testscore = (statistics.mean(imagescores)/statistics.geometric_mean(imagescores))*statistics.mean(imagescores)
+    elif tally_type == "G/H Mean":
+        testscore = (statistics.geometric_mean(imagescores)/statistics.harmonic_mean(imagescores))*statistics.mean(imagescores)
+    elif tally_type == "A/H Mean":
+        testscore = (statistics.mean(imagescores)/statistics.harmonic_mean(imagescores))*statistics.mean(imagescores)
     elif tally_type == "Median":
         testscore = statistics.median(imagescores)
     elif tally_type == "Min":
@@ -121,7 +135,7 @@ def adjust_weights_score(payload_paths, classifier, tally_type, save_output_file
             os.makedirs(folder_path)
         except FileExistsError:
             pass
-        for idx, (image, prompt) in enumerate(images_prompt):
+        for idx, (image, _, _) in enumerate(images_prompt):
             image.save(os.path.join(folder_path, f"{idx}.png"))
 
         with open(os.path.join(folder_path, "_000-weights.txt"), 'w') as f:
@@ -133,14 +147,20 @@ def adjust_weights_score(payload_paths, classifier, tally_type, save_output_file
             f.write('\n')
             f.write("Test Score: ")
             f.write(str(testscore))
+            f.write('\n')
+            f.write("Prompt: ")
+            f.write(str(prompt))
+            f.write('\n')
+            f.write("Reverse Scoring: ")
+            f.write(str(reverse))
 
-        t = threading.Thread(name="unet_vis", target=add_data, args=(slALL, testscore, shared.UnetVisualizer.pygal_style, shared.UnetVisualizer.show_labels), kwargs={"save_output_files": True, "save_output_path": os.path.join(folder_path, f"unet_vis.svg")})
+        t = threading.Thread(name="unet_vis", target=add_data, args=(slALL, testscore, shared.UnetVisualizer.pygal_style, shared.UnetVisualizer.show_labels), kwargs={"save_output_files": True, "save_output_path": os.path.join(folder_path, "unet_vis.svg")})
     else:
         t = threading.Thread(name="unet_vis", target=add_data, args=(slALL, testscore, shared.UnetVisualizer.pygal_style, shared.UnetVisualizer.show_labels))
 
     t.start()
 
-    images = [image for (image, _) in images_prompt]
+    images = [image for (image, _, _) in images_prompt]
     return testscore, images
 
 lora_blocks = [
@@ -153,14 +173,11 @@ lora_blocks = [
 # final save function
 def save_checkpoint(output_mode_radio, position_id_fix_radio, output_format_radio, save_checkpoint_name, output_recipe_checkbox, weights, modelA, modelB, lora=False):
     if lora:
-        weights_lora = lora_conv(weights)
-        loraratios = ""
-        for idx, block in enumerate(lora_blocks):
-            loraratios = loraratios + f"{modelB}:{weights_lora[idx]}:{block},"
+        _weights_lora = ','.join([str(i) for i in lora_conv(weights)])
         savesets = ["overwrite"]
         if "safetensors" in output_format_radio:
             savesets.append("safetensors")
-        pluslora(modelB, loraratios, savesets, save_checkpoint_name, modelA, "float")
+        pluslora(f"{modelB}:1:CUSTOM", f"CUSTOM:{_weights_lora}", savesets, save_checkpoint_name, modelA, "float")
     else:
         # convert to standard from nat
         weights_s = weights.copy()

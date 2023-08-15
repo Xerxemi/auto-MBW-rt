@@ -40,8 +40,10 @@ def get_image_features(image, device=device, model=clip_model, preprocess=clip_p
     image_features = image_features.cpu().detach().numpy()
     return image_features
 
-def score(image, prompt=""):
+def score(image, prompt="", reverse=False):
     image_features = get_image_features(image)
     score = predictor(torch.from_numpy(image_features).to(device).float())
+    if reverse:
+        print("Reverse scoring currently not supported with this classifier. Are you sure you want to continue?")
     return score.item()
 

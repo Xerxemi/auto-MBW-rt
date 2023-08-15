@@ -42,8 +42,10 @@ clipmodel = CLIPModel.from_pretrained(clip_name).to('cuda').eval()
 aes_model = Classifier(512, 256, 1).to('cuda')
 aes_model.load_state_dict(safetensors.torch.load_file(aesthetic_path))
 
-def score(image, prompt=""):
+def score(image, prompt="", reverse=False):
     image_embeds = image_embeddings_direct(image, clipmodel, clipprocessor)
     prediction = aes_model(torch.from_numpy(image_embeds).float().to('cuda'))
+    if reverse:
+        print("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
     return prediction.item()
 

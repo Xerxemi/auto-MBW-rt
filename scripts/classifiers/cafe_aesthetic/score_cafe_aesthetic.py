@@ -4,7 +4,9 @@ import safetensors
 from transformers import CLIPModel, CLIPProcessor
 from scripts.classifiers.cafe_aesthetic.aesthetic import judge
 
-def score(image, prompt=""):
+def score(image, prompt="", reverse=False):
     aesthetic, _, _ = judge(image)
+    if reverse:
+        print("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
     return aesthetic["aesthetic"]
 

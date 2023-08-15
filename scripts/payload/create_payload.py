@@ -1,13 +1,12 @@
-import os, io
+import os
 import msgspec
 msgspec_encoders = {".json": msgspec.json.Encoder(), ".msgpack": msgspec.msgpack.Encoder(), ".toml": msgspec.toml, ".yaml": msgspec.yaml}
 msgspec_decoders = {".json": msgspec.json.Decoder(), ".msgpack": msgspec.msgpack.Decoder(), ".toml": msgspec.toml, ".yaml": msgspec.yaml}
 
 import gradio as gr
 
-from modules import sd_models, shared, processing, devices
+from modules import shared, processing, devices
 from modules.scripts import basedir
-from modules.shared import opts
 from modules.sd_samplers import samplers
 
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
@@ -56,6 +55,7 @@ def on_ui_tabs(main_block):
                         restore_faces = gr.Checkbox(label='Restore faces', value=False, visible=len(shared.face_restorers) > 1, elem_id="autombw_restore_faces")
                         tiling = gr.Checkbox(label='Tiling', value=False, elem_id="autombw_tiling")
                         enable_hr = gr.Checkbox(label='Hires. fix', value=False, elem_id="autombw_enable_hr")
+                        reverse_scoring = gr.Checkbox(label='reverse_scoring', value=False)
                 with gr.Column(scale=1, min_width=150):
                     with gr.Row():
                         hr_final_resolution = gr.HTML(value="", elem_id="txtimg_hr_finalres", label="Upscaled resolution", interactive=False, visible=False)
@@ -102,6 +102,7 @@ def on_ui_tabs(main_block):
             "tiling": args[tiling],
             "negative_prompt": args[negative_prompt],
             "wildcard_type": args[radio_wildcard_type],
+            "reverse_scoring": args[reverse_scoring]
         }
         payload = msgspec_encoders[args[radio_ext]].encode(payload)
         payload_path = os.path.join(__location__, "payloads", args[filename] + args[radio_ext])
@@ -137,6 +138,7 @@ def on_ui_tabs(main_block):
         "tiling": tiling,
         "negative_prompt": negative_prompt,
         "wildcard_type": radio_wildcard_type,
+        "reverse_scoring": reverse_scoring
     }
     # payload_args = [enable_hr, denoising_strength, hr_scale, hr_upscaler, hr_second_pass_steps, hr_resize_x, hr_resize_y,
     #     positive_prompt, seed, sampler, batch_size, batch_count, steps, cfg_scale, width, height, restore_faces, tiling, negative_prompt]

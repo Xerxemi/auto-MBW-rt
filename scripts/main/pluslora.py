@@ -1,14 +1,30 @@
 #code proudly stolen from https://github.com/hako-mikan/sd-webui-supermerger
 
-import os, gc
+import os, gc, re
 
-import torch, safetensors
+import torch
 from safetensors.torch import load_file, save_file
 
-from modules import sd_models, shared
+from modules import sd_models #, shared
+
 #dirty lora import
 import importlib
 lora = importlib.import_module("extensions-builtin.Lora.lora")
+
+re_digits = re.compile(r"\d+")
+
+re_unet_down_blocks = re.compile(r"lora_unet_down_blocks_(\d+)_attentions_(\d+)_(.+)")
+re_unet_mid_blocks = re.compile(r"lora_unet_mid_block_attentions_(\d+)_(.+)")
+re_unet_up_blocks = re.compile(r"lora_unet_up_blocks_(\d+)_attentions_(\d+)_(.+)")
+
+re_unet_down_blocks_res = re.compile(r"lora_unet_down_blocks_(\d+)_resnets_(\d+)_(.+)")
+re_unet_mid_blocks_res = re.compile(r"lora_unet_mid_block_resnets_(\d+)_(.+)")
+re_unet_up_blocks_res = re.compile(r"lora_unet_up_blocks_(\d+)_resnets_(\d+)_(.+)")
+
+re_unet_downsample = re.compile(r"lora_unet_down_blocks_(\d+)_downsamplers_0_conv(.+)")
+re_unet_upsample = re.compile(r"lora_unet_up_blocks_(\d+)_upsamplers_0_conv(.+)")
+
+re_text_block = re.compile(r"lora_te_text_model_encoder_layers_(\d+)_(.+)")
 
 def filenamecutter(name,model_a = False):
     from modules import sd_models
@@ -193,11 +209,29 @@ def savemodel(state_dict,currentmodel,fname,savesets,model_a,metadata={}):
 
     print("Saving...")
     if ext == ".safetensors":
-        safetensors.torch.save_file(state_dict, fname, metadata=metadata)
+        save_file(state_dict, fname, metadata=metadata)
     else:
         torch.save(state_dict, fname)
     print("Done!")
     return "Merged model saved in "+fname
+
+LORABLOCKS=["encoder",
+"diffusion_model_input_blocks_1_",
+"diffusion_model_input_blocks_2_",
+"diffusion_model_input_blocks_4_",
+"diffusion_model_input_blocks_5_",
+"diffusion_model_input_blocks_7_",
+"diffusion_model_input_blocks_8_",
+"diffusion_model_middle_block_",
+"diffusion_model_output_blocks_3_",
+"diffusion_model_output_blocks_4_",
+"diffusion_model_output_blocks_5_",
+"diffusion_model_output_blocks_6_",
+"diffusion_model_output_blocks_7_",
+"diffusion_model_output_blocks_8_",
+"diffusion_model_output_blocks_9_",
+"diffusion_model_output_blocks_10_",
+"diffusion_model_output_blocks_11_"]
 
 def pluslora(lnames,loraratios,settings,output,model,precision):
     if model == []:
@@ -220,7 +254,6 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
 
     names=[]
     filenames=[]
-    loratypes=[]
     lweis=[]
 
     for n in lnames:
@@ -255,7 +288,7 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
       print(f"loading: {name}")
       lora_sd = load_state_dict(filename, torch.float)
 
-      print(f"merging..." ,lwei)
+      print("merging..." ,lwei)
       for key in lora_sd.keys():
         ratio = 1
 

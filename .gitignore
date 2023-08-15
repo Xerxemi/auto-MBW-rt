@@ -1,7 +1,10 @@
 /csv/*
 !/csv/preset.tsv
 /payloads/*
+!/payloads/payloads
 /scripts/util/test.py
+/wildcards/*
+!/wildcards/wildcards
 
 #
 _*

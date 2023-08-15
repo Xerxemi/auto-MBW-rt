@@ -1,18 +1,18 @@
-import os, sys, gc, pdb
-import re
-import statistics
-import random
+import os  #, sys, gc, pdb
+# import re
+# import statistics
+# import random
 import datetime
 import numpy as np
 import gradio as gr
 
 from modules import sd_models, shared
 from modules.scripts import basedir
-try:
-    from modules import hashes
-    from modules.sd_models import CheckpointInfo
-except:
-    pass
+# try:
+#     from modules import hashes
+#     from modules.sd_models import CheckpointInfo
+# except:
+#     pass
 
 #dirty lora import
 import importlib
@@ -20,7 +20,7 @@ lora = importlib.import_module("extensions-builtin.Lora.lora")
 #lora.available_lora_aliases
 
 #util funcs
-from scripts.util.util_funcs import grouped
+# from scripts.util.util_funcs import grouped
 #history & presets
 from scripts.util.history import MergeHistory
 history = MergeHistory()
@@ -79,7 +79,7 @@ hyper = Hyperactive(n_processes=1, distribution="joblib")
 
 from search_data_collector import SearchDataCollector
 
-tally_types = ["Harmonic Mean", "Geometric Mean", "Arithmetic Mean", "Quadratic Mean", "Cubic Mean", "Median", "Min", "Max", "Mid-Range"]
+tally_types = ["Harmonic Mean", "Geometric Mean", "Arithmetic Mean", "Quadratic Mean", "Cubic Mean", "A/G Mean", "G/H Mean", "A/H Mean", "Median", "Min", "Max", "Mid-Range"]
 
 def on_ui_tabs(main_block):
 
@@ -98,12 +98,13 @@ def on_ui_tabs(main_block):
     def get_display_unet():
         return shared.UnetVisualizer.unet_vis
 
+    # (P1,P2,P3) to circumvent ui-config shenanigans when labels are identical
     with gr.Column():
         with gr.Row(variant="panel"):
             with gr.Column():
                 with gr.Row(equal_height=True):
                     with gr.Column(min_width=150):
-                        enabled_1 = gr.Checkbox(label="Enabled", value=True)
+                        enabled_1 = gr.Checkbox(label="Enabled (P1)", value=True)
                         chk_save_output_files_1 = gr.Checkbox(label="Save Output Files", value=False)
                         sl_search_type_balance_1 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
@@ -134,7 +135,7 @@ def on_ui_tabs(main_block):
             with gr.Column():
                 with gr.Row(equal_height=True):
                     with gr.Column(min_width=150):
-                        enabled_2 = gr.Checkbox(label="Enabled", value=False)
+                        enabled_2 = gr.Checkbox(label="Enabled (P2)", value=False)
                         chk_save_output_files_2 = gr.Checkbox(label="Save Output Files", value=False)
                         sl_search_type_balance_2 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
@@ -165,7 +166,7 @@ def on_ui_tabs(main_block):
             with gr.Column():
                 with gr.Row(equal_height=True):
                     with gr.Column(min_width=150):
-                        enabled_3 = gr.Checkbox(label="Enabled", value=False)
+                        enabled_3 = gr.Checkbox(label="Enabled (P3)", value=False)
                         chk_save_output_files_3 = gr.Checkbox(label="Save Output Files", value=False)
                         sl_search_type_balance_3 = gr.Slider(label="Opt (A->B)", minimum=0, maximum=1, step=0.1, value=0)
                     with gr.Column(scale=32):
@@ -225,6 +226,7 @@ def on_ui_tabs(main_block):
                                         experimental_range_checkbox = gr.Checkbox(label='Enable Experimental Range', value=False)
                                         chk_enable_clamping = gr.Checkbox(label="Search Space Clamping", value=False)
                                         chk_enable_lora_merging = gr.Checkbox(label="LoRA Merging", value=False)
+                                        chk_enable_multi_merge_twostep = gr.Checkbox(label="Multi Merge Twostep", value=False)
                             with gr.Column():
                                 force_cpu_checkbox = gr.Checkbox(label='Force CPU (Max Precision)', value=True, interactive=True)
                                 output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value="Max Precision", type="value", interactive=True)
@@ -299,6 +301,7 @@ def on_ui_tabs(main_block):
         "chk_enable_shared_memory": chk_enable_shared_memory,
         "chk_enable_clamping": chk_enable_clamping,
         "chk_enable_lora_merging": chk_enable_lora_merging,
+        "chk_enable_multi_merge_twostep": chk_enable_multi_merge_twostep,
         "force_cpu_checkbox": force_cpu_checkbox,
         "experimental_range_checkbox": experimental_range_checkbox,
         "output_mode_radio": output_mode_radio,
@@ -385,8 +388,9 @@ def on_ui_tabs(main_block):
             model_O = args[params["txt_model_O"]]
             multi_merge = args[params["txt_multi_merge"]]
             lora = args[params["chk_enable_lora_merging"]]
+            multi_merge_twostep = args[params["chk_enable_multi_merge_twostep"]]
 
-            print( "\n #### AutoMBW - V2 ####")
+            print("\n #### AutoMBW - V2 ####")
 
             #parsing multi merge txt block
             multi_model_A = []
@@ -412,7 +416,7 @@ def on_ui_tabs(main_block):
                 if lora:
                     if search_space:
                         disabled = [str(idx) for idx in lora_disabled]
-                        zero = [0]
+                        zero = [0.0]
                     else:
                         disabled = lora_disabled
                         zero = 0
@@ -458,27 +462,35 @@ def on_ui_tabs(main_block):
                 save_output_files = localargs.pass_through["save_output_files"]
                 model_B = localargs.pass_through["model_B"]
                 lora = localargs.pass_through["lora"]
+                seedplus = localargs.pass_through["seedplus"]
 
-                score, images = adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, testweights, model_B, lora=lora)
+                score, images = adjust_weights_score(payload_paths, classifier, tally_type, save_output_files, testweights, model_B, lora=lora, seedplus=seedplus)
                 display_images = images
 
                 return score
 
-            if args[pass_params_1["enabled"]] and args[pass_params_2["enabled"]] and args[pass_params_3["enabled"]]:
-                passes = 3
-            elif args[pass_params_1["enabled"]] and args[pass_params_2["enabled"]]:
-                passes = 2
-            elif args[pass_params_1["enabled"]]:
-                passes = 1
-            else:
-                passes = 0
+            passes = 0
+            for pass_params in [pass_params_1, pass_params_2, pass_params_3]:
+                if args[pass_params["enabled"]] and args[pass_params["payloads"]] != None and args[pass_params["payloads"]] != []:
+                    passes = passes + 1
+                else:
+                    break
 
-            for model_A, model_B, model_O in zip(multi_model_A, multi_model_B, multi_model_O):
+            for idx, (model_A, model_B, model_O) in enumerate(zip(multi_model_A, multi_model_B, multi_model_O)):
+
+                #twostep seed, add one to seed on every other merge to stop merger from settling into a peak from a certain set of images
+                #we can also use this value for more seed modifications in the future
+                seedplus = 0 if idx % 2 == 0 or multi_merge_twostep == False else 1
 
                 if model_O == "":
                     model_O = "autoMBW_" + os.path.splitext(model_A)[0] +"_" + os.path.splitext(model_B)[0]
 
+                #required since a webui update caused webui to not load newly created checkpoints without a list (which is just also regeneration of the model list)
+                sd_models.list_models()
+                model_A = sd_models.get_closet_checkpoint_match(model_A).title
+
                 print("\n ----------AUTOMERGE START----------\n    modelA: " + str(model_A) + "\n    modelB: " + str(model_B) + "\n    modelO: " + str(model_O) + "\n")
+
                 handle_model_load(model_A, model_B, args[params["force_cpu_checkbox"]], weights, lora=lora)
 
                 memory_warm_start = None
@@ -521,7 +533,8 @@ def on_ui_tabs(main_block):
                         "save_output_files": args[pass_params["chk_save_output_files"]],
                         "model_A": model_A,
                         "model_B": model_B,
-                        "lora": lora
+                        "lora": lora,
+                        "seedplus": seedplus
                     }
 
                     #optimizer strategy to combine 2 opts
@@ -599,7 +612,7 @@ def on_ui_tabs(main_block):
                 save_checkpoint(args[params["output_mode_radio"]], args[params["position_id_fix_radio"]], args[params["output_format_radio"]], model_O, args[params["output_recipe_checkbox"]], weights, model_A, model_B, lora=lora)
 
             print("autoMBW [info]: merge completed.")
-            return gr.update(value=f"merge completed.<br>")
+            return gr.update(value="merge completed.<br>")
         except:
             raise
         finally:
