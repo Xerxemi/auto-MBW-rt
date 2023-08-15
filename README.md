@@ -1,4 +1,6 @@
-# auto-MBW-rt | a.k.a V2
+# auto-MBW-rt | a.k.a V2-BETA
+*NOTE: THIS IS IN BETA. NEWER COMMITS MAY BREAK OLDER ONES. FUNCTIONALITY NOT GUARANTEED.*
+
 An automated (yes, that's right, **AUTOMATIC**) MBW extension for AUTO1111.
 
 Rewritten from scratch (not a deviation) UI and code.
