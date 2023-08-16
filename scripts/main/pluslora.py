@@ -8,8 +8,8 @@ from safetensors.torch import load_file, save_file
 from modules import sd_models #, shared
 
 #dirty lora import
-import importlib
-lora = importlib.import_module("extensions-builtin.Lora.lora")
+# import importlib
+# lora = importlib.import_module("extensions-builtin.Lora.lora")
 
 re_digits = re.compile(r"\d+")
 
@@ -234,6 +234,8 @@ LORABLOCKS=["encoder",
 "diffusion_model_output_blocks_11_"]
 
 def pluslora(lnames,loraratios,settings,output,model,precision):
+    import lora
+
     if model == []:
       return "ERROR: No model Selected"
     if lnames == "":

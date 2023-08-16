@@ -14,10 +14,10 @@ from modules.scripts import basedir
 # except:
 #     pass
 
-#dirty lora import
-import importlib
-lora = importlib.import_module("extensions-builtin.Lora.lora")
-#lora.available_lora_aliases
+# #dirty lora import
+# import importlib
+# lora = importlib.import_module("extensions-builtin.Lora.lora")
+# #lora.available_lora_aliases
 
 #util funcs
 # from scripts.util.util_funcs import grouped
@@ -82,6 +82,7 @@ from search_data_collector import SearchDataCollector
 tally_types = ["Harmonic Mean", "Geometric Mean", "Arithmetic Mean", "Quadratic Mean", "Cubic Mean", "A/G Mean", "G/H Mean", "A/H Mean", "Median", "Min", "Max", "Mid-Range"]
 
 def on_ui_tabs(main_block):
+    import lora
 
     search_types = shared.HyperOptimizers.optimizers
 
