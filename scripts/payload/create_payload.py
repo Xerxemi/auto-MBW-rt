@@ -9,6 +9,8 @@ from modules import shared, processing, devices
 from modules.scripts import basedir
 from modules.sd_samplers import samplers
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 payloads_path = os.path.join(__location__, "payloads")
@@ -22,7 +24,7 @@ def refresh_payloads():
             if os.path.splitext(f)[1] in [".json", ".msgpack", ".toml", ".yaml"]:
                 discovered_payloads.append(f)
     discovered_payloads = [*set(discovered_payloads)]
-    print("autoMBW [info]: discovered " + str(len(discovered_payloads)) + " payloads.")
+    logger.info("discovered " + str(len(discovered_payloads)) + " payloads.")
     return gr.update(choices=discovered_payloads)
 
 refresh_payloads()
@@ -110,10 +112,10 @@ def on_ui_tabs(main_block):
             with open(payload_path, "wb") as f:
                 f.write(payload)
             if args[chk_overwrite]:
-                print("warning [overwrite]: file already exists")
+                logger.warning("[overwrite]: file already exists")
                 return f"success: file overwritten [{payload_path}].<br>"
         else:
-            print("error: file already exists")
+            logger.error("Error: File already exists")
             return "error: file already exists.<br>"
         return f"success: file created [{payload_path}].<br>"
 

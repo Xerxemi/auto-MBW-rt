@@ -35,6 +35,8 @@ from scripts.util.util_funcs import LazyLoader
 #required for LazyLoader to work
 import scripts.classifiers
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 classifiers_path = os.path.join(__location__, "scripts", "classifiers")
@@ -54,7 +56,7 @@ def refresh_plugins():
                 if module.startswith('score') and module.endswith('.py'):
                     module_name = os.path.splitext(module)[0]
                     discovered_plugins.update({module_name: LazyLoader(module_name, globals(), f"scripts.classifiers.{directory}.{module_name}")})
-    print("autoMBW [info]: discovered " + str(len(discovered_plugins)) + " classifier plugins.")
+    logger.info("discovered " + str(len(discovered_plugins)) + " classifier plugins.")
 
 refresh_plugins()
 
@@ -67,7 +69,7 @@ def refresh_payloads():
             if os.path.splitext(f)[1] in [".json", ".msgpack", ".toml", ".yaml"]:
                 discovered_payloads.append(os.path.splitext(f)[0])
     discovered_payloads = [*set(discovered_payloads)]
-    print("autoMBW [info]: discovered " + str(len(discovered_payloads)) + " payloads.")
+    logger.info("discovered " + str(len(discovered_payloads)) + " payloads.")
     return [gr.update(choices=discovered_payloads), gr.update(choices=discovered_payloads), gr.update(choices=discovered_payloads)]
 
 refresh_payloads()
@@ -87,9 +89,9 @@ def on_ui_tabs(main_block):
     search_types = shared.HyperOptimizers.optimizers
 
     if shared.cmd_opts.no_gradio_queue:
-        print("\nautoMBW [info]: --no-gradio-queue found in COMMANDLINE_ARGS | live gallery [disabled].\n")
+        logger.info("--no-gradio-queue found in COMMANDLINE_ARGS | live gallery [disabled].\n")
     else:
-        print("\nautoMBW [info]: --no-gradio-queue not found in COMMANDLINE_ARGS | live gallery [enabled].\n")
+        logger.info("--no-gradio-queue not found in COMMANDLINE_ARGS | live gallery [enabled].\n")
 
     display_images = None
     def get_display_images():
@@ -200,8 +202,7 @@ def on_ui_tabs(main_block):
                     image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=0.5, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
                 with gr.Row():
                     with gr.Column():
-                        gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=0.5, elem_id="autombw_gallery") if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery")
-                        gallery_display_images.style(grid=4, height=2048, container=True)
+                        gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=0.5, elem_id="autombw_gallery", columns=4, height=2048, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
                         with gr.Row(variant="panel"):
                             btn_do_mbw = gr.Button(value="Run Merge", variant="primary")
                             btn_reload_checkpoint = gr.Button(value="Reload Checkpoint")
@@ -391,7 +392,7 @@ def on_ui_tabs(main_block):
             lora = args[params["chk_enable_lora_merging"]]
             multi_merge_twostep = args[params["chk_enable_multi_merge_twostep"]]
 
-            print("\n #### AutoMBW - V2 ####")
+            logger.info("#### AutoMBW - V2 ####")
 
             #parsing multi merge txt block
             multi_model_A = []
@@ -405,9 +406,9 @@ def on_ui_tabs(main_block):
                     multi_model_O.append(line.split("+")[1].split("=")[1].strip())
                 if len(multi_model_A) == len(multi_model_B) == len(multi_model_O):
                     disable_singular_merge = True
-                    print("autoMBW [info]: multi merge detected.")
+                    logger.info("multi merge detected.")
                 else:
-                    print("autoMBW [error]: multi merge parse error.")
+                    logger.error("multi merge parse error.")
             if not disable_singular_merge:
                 multi_model_A = [model_A]
                 multi_model_B = [model_B]
@@ -449,7 +450,7 @@ def on_ui_tabs(main_block):
                         testweights[int(key)*grouping+interval] = localargs[key]
 
                 _weights = ','.join([str(i) for i in testweights])
-                print("\n testweights: " + _weights)
+                logger.info("testweights: " + _weights)
 
                 payloads = localargs.pass_through["payloads"]
                 payload_paths = []
@@ -490,7 +491,10 @@ def on_ui_tabs(main_block):
                 sd_models.list_models()
                 model_A = sd_models.get_closet_checkpoint_match(model_A).title
 
-                print("\n ----------AUTOMERGE START----------\n    modelA: " + str(model_A) + "\n    modelB: " + str(model_B) + "\n    modelO: " + str(model_O) + "\n")
+                logger.info("----------AUTOMERGE START----------")
+                logger.info("modelA: " + str(model_A) + "")
+                logger.info("modelB: " + str(model_B) + "")
+                logger.info("modelO: " + str(model_O) + "")
 
                 handle_model_load(model_A, model_B, args[params["force_cpu_checkbox"]], weights, lora=lora)
 
@@ -612,16 +616,16 @@ def on_ui_tabs(main_block):
 
                 save_checkpoint(args[params["output_mode_radio"]], args[params["position_id_fix_radio"]], args[params["output_format_radio"]], model_O, args[params["output_recipe_checkbox"]], weights, model_A, model_B, lora=lora)
 
-            print("autoMBW [info]: merge completed.")
+            logger.info("merge completed.")
             return gr.update(value="merge completed.<br>")
         except:
             raise
         finally:
             if lora:
-                print("autoMBW [info]: LoRA does not use injection - skipping injection disable.")
+                logger.info("LoRA does not use injection - skipping injection disable.")
             else:
                 disable_injection()
-                print("autoMBW [info]: injection disabled (hopefully).")
+                logger.info("injection disabled (hopefully).")
 
 
     btn_do_mbw.click(

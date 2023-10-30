@@ -6,6 +6,8 @@ from PIL import Image
 
 from modules.scripts import basedir
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 config_path = os.path.join(__location__, "settings", "internal.toml")
@@ -40,7 +42,7 @@ def txt2img(**args):
     }
 
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-    print(response)
+    logger.debug(response)
     r = response.json()
 
     images = []

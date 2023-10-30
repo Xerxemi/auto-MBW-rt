@@ -34,6 +34,8 @@ import torch
 import safetensors
 from transformers import CLIPModel, CLIPProcessor
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 dirname = os.path.dirname(__file__)
 aesthetic_path = os.path.join(dirname, "aes-B32-v0.safetensors")
 clip_name = 'openai/clip-vit-base-patch32'
@@ -46,6 +48,6 @@ def score(image, prompt="", reverse=False):
     image_embeds = image_embeddings_direct(image, clipmodel, clipprocessor)
     prediction = aes_model(torch.from_numpy(image_embeds).float().to('cuda'))
     if reverse:
-        print("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
+        logger.warning("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
     return prediction.item()
 

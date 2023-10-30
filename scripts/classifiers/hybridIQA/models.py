@@ -347,7 +347,7 @@ def resnet152_backbone(lda_out_channels, in_chn, pretrained=False, **kwargs):
 
 def weights_init_xavier(m):
     classname = m.__class__.__name__
-    # print(classname)
+    # logger.debug(classname)
     # if isinstance(m, nn.Conv2d):
     if classname.find('Conv') != -1:
         init.kaiming_normal_(m.weight.data)
