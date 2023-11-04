@@ -526,7 +526,7 @@ def on_ui_tabs(main_block):
                     # lora_sanitize(search_space, search_space=True)
 
                     warm_start = [{str(k): v for k, v in enumerate(weights)}] if args[pass_params["chk_warm_start"]] else []
-                    early_stopping = {"n_iter_no_change": args[pass_params["sl_n_iter_no_change"]], "tol_abs": args[pass_params["sl_tol_abs"]], "tol_rel": args[pass_params["tol_rel"]]} if args[pass_params["chk_enable_early_stop"]] else None
+                    early_stopping = {"n_iter_no_change": args[pass_params["sl_n_iter_no_change"]], "tol_abs": args[pass_params["sl_tol_abs"]], "tol_rel": args[pass_params["sl_tol_rel"]]} if args[pass_params["chk_enable_early_stop"]] else None
 
                     pass_through = {
                         "grouping": args[pass_params["sl_test_grouping"]],

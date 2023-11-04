@@ -42,13 +42,22 @@ def txt2img(**args):
     }
 
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
-    logger.debug(response)
+    
+    if r.status_code != 200:
+       logger.error(response)
+       if r.status_code == 404:
+            logger.error('Please enable WebUI API by adding --api in webui-user: https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API')
+       response.raise_for_status()
+
     r = response.json()
 
     images = []
-    for i in r['images']:
-        image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
-        images.append(image)
+    if images in r:
+        for i in r['images']:
+            image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
+            images.append(image)
+    else:
+        logger.warning("API response has no images!")
 
     return images
 

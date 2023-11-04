@@ -26,13 +26,32 @@
 
 - Or make a directory `auto-MBW-rt` directly in `tmp` then rerun the installation.
 
-4. Now the extension starts with warning messages.
+4. From [AutoMBW V1](https://github.com/Xerxemi/sdweb-auto-MBW), make sure your WebUI instance has API enabled as `--api` in `COMMANDLINE_ARGS`.
+
+```bat
+REM my example
+set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers --no-half-vae --api --port=7861 --device-id=1 
+```
+
+5. Now the extension starts with warning messages.
 
 ## Fixing warning messages
 
 - Install from branch `webui-160-update`.
 
 - Meanwhile I've added a logger.
+
+## Basic procedure
+
+- "Make payload". Treat it like "trigger words", *feed your desire*.
+
+- "Set classifier". I like [BayesianOptimizer](https://towardsdatascience.com/a-guide-to-find-the-best-boosting-model-using-bayesian-hyperparameter-tuning-but-without-c98b6a1ecac8) with [ImageReward](https://arxiv.org/abs/2304.05977).
+
+- "Search". It takes time and tons of disk I/O.
+
+## If you encounter errors
+
+- Trust me. **Always reboot webUI first.** State control in WebUI (even python) is awful.
 
 ----
 
