@@ -36,6 +36,6 @@ if not logger_autombwrt.handlers:
     logger_autombwrt.addHandler(handler)
 
 # Configure logger
-loglevel_string = getattr(shared.cmd_opts, "autombwrt_loglevel", "INFO")
+loglevel_string = getattr(shared.cmd_opts, "autombwrt_loglevel", "DEBUG")
 loglevel = getattr(logging, loglevel_string.upper(), None)
 logger_autombwrt.setLevel(loglevel)

@@ -3,6 +3,7 @@ import requests
 import msgspec
 import base64
 from PIL import Image
+import json
 
 from modules.scripts import basedir
 
@@ -12,6 +13,8 @@ from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
 __location__ = basedir()
 config_path = os.path.join(__location__, "settings", "internal.toml")
 url = msgspec.toml.decode(open(config_path, "rb").read())["url"]
+
+LOG_API_RESPONSE = os.path.join(__location__, "_last_api_response.json")
 
 def txt2img(**args):
     payload = {
@@ -43,16 +46,21 @@ def txt2img(**args):
 
     response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)
     
-    if r.status_code != 200:
+    logger.debug(response)
+
+    if response.status_code != 200:
        logger.error(response)
-       if r.status_code == 404:
+       if response.status_code == 404:
             logger.error('Please enable WebUI API by adding --api in webui-user: https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API')
        response.raise_for_status()
 
     r = response.json()
+    #logger.debug(json.dumps(r))
+    with open(LOG_API_RESPONSE, 'w') as f:
+        f.write(json.dumps(r))
 
     images = []
-    if images in r:
+    if 'images' in r:
         for i in r['images']:
             image = Image.open(io.BytesIO(base64.b64decode(i.split(",",1)[0])))
             images.append(image)
