@@ -43,15 +43,60 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 - A minimal payload (e.g. single 512x512 image) is suggested if you are using it for the first time, to make sure the code works. ~~programmer's life~~
 
+- Payloads are stored in `payloads/*.json`.
+
 2. "Set classifier". I like [BayesianOptimizer](https://nbviewer.org/github/SimonBlanke/hyperactive-tutorial/blob/main/notebooks/hyperactive_tutorial.ipynb) with [ImageReward](https://github.com/THUDM/ImageReward). 
 
-3. "Search". For RTX 3090, it *requires around 60x time for each payload.* If the payload takes around 15 seconds to complete, it takes around 15 minutes. 
+- **I will set my recommended values as default.**
+
+3. "Search". For RTX 3090, it *requires around 60x time for each payload.* If the payload takes around 15 seconds to complete, it takes around 15 minutes. It applies for a batch using 4 minutes (4.5 hours).
+
 - Optimization part (on test score) takes only a few seconds to compelete. 26 parameters is easy, comparing to [860M for SD](https://huggingface.co/docs/diffusers/v0.5.1/en/api/pipelines/stable_diffusion). 
-- **"Force CPU" is forced on.** I see `RuntimeError: expected device cuda:0 but got device cpu` if it is off ~~and it is a headache to trace and move all tensors.~~
+
+- You may see ["Warning: training sequential model failed. Performing random iteration instead."](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L153) It means that the optimizer has nothing to initialize but pure random. Ignore this if you're going to start from random weights. 
+
+4. See `csv/history/*/*.csv` for results.
 
 ## If you encounter errors
 
 - Trust me. **Always reboot webUI first.** State control in WebUI (even python) is awful.
+
+## Observations and explanations of parameters
+
+- For "Search Type A" and "Search Type B", they are related "Opt (A to B)" for switching streadgy in runtime. *By default it is solely using Type A*.
+
+- For "P1 / P2 / P3", they also switch streadgy in runtime, in simple iteration in sequence. *By default only P1 is enabled*. ~~Some ML algorithms requires consistency, I'll add reference if I really find the reasoning on this feature.~~
+
+- **"Force CPU" is forced on.** I see `RuntimeError: expected device cuda:0 but got device cpu` if it is off ~~and it is a headache to trace and move all tensors.~~
+
+- "Test Intervals" is kept 10. Using 100 raised `ValueError: broadcast dimensions too large.` already. I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
+
+```py
+    if args[params["chk_enable_clamping"]]:
+        search_space.update({str(idx): [*np.round(np.linspace(args[clamp_lower[idx]], args[clamp_upper[idx]], num=args[pass_params["sl_test_interval"]]+1), 8)]})
+    else:
+        search_space.update({str(idx): [*np.round(np.linspace(lower, upper, num=args[pass_params["sl_test_interval"]]+1), 8)]})
+```
+
+- **Keep "Test Grouping" as 1.** I don't know why we need to repeat the parameters. [Is it related to supersampling?](https://en.wikipedia.org/wiki/Supersampling)
+
+```py
+    grouping = localargs.pass_through["grouping"]
+    tunables = localargs.pass_through["tunables"]
+    testweights = localargs.pass_through["weights"].copy()
+    for key in tunables:
+        for interval in range(grouping):
+            testweights[int(key)*grouping+interval] = localargs[key]
+
+```
+
+- **Initialize Grid / Vertex / Random should be ignored.** It is only useful if you are dedicated to search from the extreme ratios first (pure A by experience). Also the search parameters are way too much (24 + 2 in total). *It will waste so much time.*
+
+- **"Warm Start" will be disabled.** It means "Read the parameters from the input for initialization", with the 26 slidebars provided. Disable for random initialization (common for DNN training).
+
+- Clamping / LoRA is untouched. I only moved the UI components to reduce some area. 
+
+- "Early Stop" is enabled with parameters untouched. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is reasonable.
 
 ## Change Log
 
@@ -59,6 +104,8 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 ](https://github.com/Mikubill/sd-webui-controlnet).
 
 - Fix for multiple SD instandces. It reads `--port` instead of hardcoded `http://127.0.0.1:7860`.
+
+- **Rearrange the UI components.** It is so raw and confusing.
 
 ## This is part of my research.
 

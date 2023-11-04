@@ -64,7 +64,7 @@ def on_ui_tabs(main_block):
             with gr.Row(elem_id="autombw_hires_fix_row1"):
                 hr_upscaler = gr.Dropdown(label="Upscaler", elem_id="autombw_hr_upscaler", choices=[*shared.latent_upscale_modes, *[x.name for x in shared.sd_upscalers]], value=shared.latent_upscale_default_mode, visible=False)
                 hr_second_pass_steps = gr.Slider(minimum=0, maximum=150, step=1, label='Hires steps', value=0, elem_id="autombw_hires_steps", visible=False)
-                denoising_strength = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label='Denoising strength', value=0.7, elem_id="autombw_denoising_strength", visible=False)
+                denoising_strength = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label='Denoising strength', value=0.7, elem_id="autombw_denoising_strength", visible=False)
             with gr.Row(elem_id="autombw_hires_fix_row2"):
                 hr_scale = gr.Slider(minimum=1.0, maximum=4.0, step=0.05, label="Upscale by", value=2.0, elem_id="autombw_hr_scale", visible=False)
                 hr_resize_x = gr.Slider(minimum=0, maximum=2048, step=64, label="Resize width to", value=0, elem_id="autombw_hr_resize_x", visible=False)
