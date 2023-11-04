@@ -230,8 +230,8 @@ def on_ui_tabs(main_block):
                                         chk_enable_lora_merging = gr.Checkbox(label="LoRA Merging", value=False)
                                         chk_enable_multi_merge_twostep = gr.Checkbox(label="Multi Merge Twostep", value=False)
                             with gr.Column():
-                                force_cpu_checkbox = gr.Checkbox(label='Force CPU (Max Precision)', value=True, interactive=True)
-                                output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value="Max Precision", type="value", interactive=True)
+                                force_cpu_checkbox = gr.Checkbox(label='Force CPU (Max Precision)', value=True, interactive=False)
+                                output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value="Max Precision", type="value", interactive=False)
                                 position_id_fix_radio = gr.Radio(label="Skip/Reset CLIP position_ids", choices=["Keep Original", "Fix"], value="Keep Original", type="value", interactive=True)
                                 output_format_radio = gr.Radio(label="Output Format", choices=[".ckpt", ".safetensors"], value=".ckpt", type="value", interactive=True)
                                 output_recipe_checkbox = gr.Checkbox(label="Output Recipe", value=True, interactive=True)
