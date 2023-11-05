@@ -90,13 +90,18 @@ def on_ui_tabs(main_block):
 
     # Injecting my preset. "Trust me I am a AI / ML student".
     BAYESIAN_OPTIMIZER_INDEX = 0
+    IMAGE_REWARD_INDEX = 0
     ARITHMETIC_MEAN_INDEX = 0
     try:
         BAYESIAN_OPTIMIZER_INDEX = [*search_types.keys()].index("BayesianOptimizer")
     except:
         logger.debug("Suggested BayesianOptimizer is not found.")
     try:
-        ARITHMETIC_MEAN_INDEX = [*tally_types.keys()].index("Arithmetic Mean")
+        IMAGE_REWARD_INDEX = [*discovered_plugins.keys()].index("score_image_reward")
+    except:
+        logger.debug("Suggested score_image_reward is not found.")        
+    try:
+        ARITHMETIC_MEAN_INDEX = tally_types.index("Arithmetic Mean")
     except:
         logger.debug("Suggested Arithmetic Mean is not found.")
 
@@ -132,7 +137,7 @@ def on_ui_tabs(main_block):
         with gr.Row(variant="panel"):
             with gr.Accordion(label = "P1", open = True):
                 with gr.Column():
-                    with gr.Row(equal_height=True):
+                    with gr.Row():
                         with gr.Column():
                             enabled_1 = gr.Checkbox(label="Enabled (P1)", value=True)
                             chk_save_output_files_1 = gr.Checkbox(label="Save Output Files", value=False)
@@ -140,22 +145,22 @@ def on_ui_tabs(main_block):
                         with gr.Column():
                             payloads_1 = gr.Dropdown(label="Payloads", choices=discovered_payloads, multiselect=True, elem_id="autombw_payloads_1")
                         with gr.Column():
-                                chk_enable_early_stop_1 = gr.Checkbox(label="Early Stop", value=True)
-                                sl_n_iter_no_change_1 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=25, interactive=False)
-                                sl_tol_abs_1 = gr.Slider(label="Absolute Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
-                                sl_tol_rel_1 = gr.Slider(label="Relative Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
+                            chk_enable_early_stop_1 = gr.Checkbox(label="Early Stop", value=True)
+                            sl_n_iter_no_change_1 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=25, interactive=True)           
+                            sl_tol_abs_1 = gr.Slider(label="Absolute Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=True)
+                            sl_tol_rel_1 = gr.Slider(label="Relative Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=True)
                     with gr.Row():
                         with gr.Column():
                             with gr.Row():
                                 dropdown_search_type_A_1 = gr.Dropdown(label="Search Type A", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_A_1")
                                 dropdown_search_type_B_1 = gr.Dropdown(label="Search Type B", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_B_1")
-                            dropdown_classifiers_1 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_1")
+                            dropdown_classifiers_1 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_1")
                             dropdown_tally_type_1 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_1")
                         with gr.Column():
                             sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
+                            sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_1 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
+                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_1 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_1 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -177,13 +182,13 @@ def on_ui_tabs(main_block):
                             with gr.Row():
                                 dropdown_search_type_A_2 = gr.Dropdown(label="Search Type A", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_A_2")
                                 dropdown_search_type_B_2 = gr.Dropdown(label="Search Type B", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_B_2")
-                            dropdown_classifiers_2 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_2")
+                            dropdown_classifiers_2 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_2")
                             dropdown_tally_type_2 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_2")
                         with gr.Column():
                             sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
+                            sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_2 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
+                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_2 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_2 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -209,13 +214,13 @@ def on_ui_tabs(main_block):
                             with gr.Row():
                                 dropdown_search_type_A_3 = gr.Dropdown(label="Search Type A", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_A_3")
                                 dropdown_search_type_B_3 = gr.Dropdown(label="Search Type B", choices=[*search_types.keys()], value=[*search_types.keys()][BAYESIAN_OPTIMIZER_INDEX], elem_id="autombw_search_type_B_3")
-                            dropdown_classifiers_3 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][0], elem_id="autombw_classifiers_3")
+                            dropdown_classifiers_3 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_3")
                             dropdown_tally_type_3 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_3")
                         with gr.Column():
                             sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=2880, step=1, value=2880)
+                            sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_3 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=100, step=1, value=10)
+                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_3 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_3 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -229,11 +234,8 @@ def on_ui_tabs(main_block):
         with gr.Row(variant="panel"):
             with gr.Column():
                 with gr.Row():
-                    with gr.Accordion(label = "UNET Visualizer [enabled]" if shared.cmd_opts.gradio_queue else "UNET Visualizer [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
-                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=0.5, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
-                with gr.Row():
                     with gr.Column():
-                        with gr.Accordion(label = "UNET Visualizer [enabled]" if shared.cmd_opts.gradio_queue else "UNET Visualizer [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
+                        with gr.Accordion(label = "Gallery [enabled]" if shared.cmd_opts.gradio_queue else "Gallery [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
                             gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=0.5, elem_id="autombw_gallery", columns=4, height=1024, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
                     with gr.Column():
                         txt_multi_merge = gr.Text(label="Multi Merge CMD", lines=6)
@@ -264,10 +266,13 @@ def on_ui_tabs(main_block):
                                         chk_enable_multi_merge_twostep = gr.Checkbox(label="Multi Merge Twostep", value=False)
                             with gr.Column():
                                 force_cpu_checkbox = gr.Checkbox(label='Force CPU (Max Precision)', value=True, interactive=False)
-                                output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value=0, type="value", interactive=False)
-                                position_id_fix_radio = gr.Radio(label="Skip/Reset CLIP position_ids", choices=["Keep Original", "Fix"], value=0, type="value", interactive=True)
-                                output_format_radio = gr.Radio(label="Output Format", choices=[".safetensors", ".ckpt"], value=0, type="value", interactive=True)
+                                output_mode_radio = gr.Radio(label="Output Mode",choices=["Max Precision", "Runtime Snapshot"], value="Max Precision", type="value", interactive=False)
+                                position_id_fix_radio = gr.Radio(label="Skip/Reset CLIP position_ids", choices=["Keep Original", "Fix"], value="Keep Original", type="value", interactive=True)
+                                output_format_radio = gr.Radio(label="Output Format", choices=[".ckpt", ".safetensors"], value=".safetensors", type="value", interactive=True)
                                 output_recipe_checkbox = gr.Checkbox(label="Output Recipe", value=True, interactive=True)
+                with gr.Row():
+                    with gr.Accordion(label = "UNET Visualizer [enabled]" if shared.cmd_opts.gradio_queue else "UNET Visualizer [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
+                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=0.5, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
         with gr.Accordion(label = "Warm Up Parameters (MBW, shared for P1 / P2 / P3)", open = False):
             with gr.Column():                  
                 with gr.Row():
@@ -582,7 +587,7 @@ def on_ui_tabs(main_block):
                         optimizer=opt_strat,
                         n_iter=args[pass_params["sl_search_iterations"]],
                         n_jobs=1,
-                        initialize={"grid": args[pass_params["sl_initialize_grid"]], "vertices": args[pass_params["sl_initialize_vertices"]], "random": args[pass_params["sl_initialize_random"]], "warm_start": warm_start} if args[pass_params["chk_warm_start"]] else {},
+                        initialize={"grid": args[pass_params["sl_initialize_grid"]], "vertices": args[pass_params["sl_initialize_vertices"]], "random": args[pass_params["sl_initialize_random"]], "warm_start": warm_start} if args[pass_params["chk_warm_start"]] else { "random": 1 },
                         pass_through=pass_through,
                         early_stopping=early_stopping,
                         memory=True,

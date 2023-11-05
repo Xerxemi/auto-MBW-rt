@@ -4,7 +4,7 @@
 
 - **NO SUPPORT FOR aki / "秋葉" build.**
 
-- Also I do not gruntee to have any decent test coverage.
+- Also I do not gruntee to have any decent test coverage. Check out [this extension](https://github.com/s1dlx/sd-webui-bayesian-merger) which is doing what I'm aiming for (but it doesn't include ImageReward, and code is older).
 
 ## Install prerequisites
 
@@ -35,7 +35,7 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 5. Install these extensions via "Extensions" > "Install from URL":
 
-- [Obviously this branch.](https://github.com/6DammK9/auto-MBW-rt/tree/webui-160-update)
+- [Obviously this branch.](https://github.com/6DammK9/auto-MBW-rt)
 
 ## Basic procedure
 
@@ -55,11 +55,22 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 - You may see ["Warning: training sequential model failed. Performing random iteration instead."](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L153) It means that the optimizer has nothing to initialize but pure random. Ignore this if you're going to start from random weights. 
 
-4. See `csv/history/*/*.csv` for results.
+4. See `csv/history/*/*.csv` for results. Also see `models/Stable-diffusion/*.test-23110502.recipe.txt` for a formatted receipe.
 
 ## If you encounter errors
 
 - Trust me. **Always reboot webUI first.** State control in WebUI (even python) is awful.
+
+### Encountered errors that I cannot solve (limitation)
+
+- Currently I am experiencing Error when updating the "UNET Visualizer" and "Gallery". It is deep into Gradio's Queue and I am unable to fix it. However before it throws error, I can see live update. Since it is not fatal crash, I'll leave it open and ignore this issue.
+
+```txt
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+...
+h11._util.LocalProtocolError: Can't send data when our state is ERROR
+```
 
 ## Observations and explanations of parameters
 
@@ -69,7 +80,11 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 - **"Force CPU" is forced on.** I see `RuntimeError: expected device cuda:0 but got device cpu` if it is off ~~and it is a headache to trace and move all tensors.~~
 
-- "Test Intervals" is kept 10. Using 100 raised `ValueError: broadcast dimensions too large.` already. I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
+- **"Test Intervals" upper range is raised to 10000.** Using 20+ for `BayseianOptimizer`` will raise `ValueError: broadcast dimensions too large.` already ([np.meshgrid](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L103)). I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
+
+```py
+all_pos_comb = np.array(np.meshgrid(*pos_space)).T.reshape(-1, n_dim)
+```
 
 ```py
     if args[params["chk_enable_clamping"]]:
@@ -98,7 +113,9 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 - "Early Stop" is enabled with parameters untouched. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is reasonable.
 
-## Change Log
+- **Search Time is greatly increased to 10000 minutes (around 7 days).** It was 2880 minutes (2 days). I have found that my prefered payloads (12 payloads x 1 image) takes longer then 2 days for worst case (expected 12 hours). It is comparable to common SD / LoRA finetuning, but computational power is still minimum (only t2i).
+
+## Change Log 
 
 - Logger is added. Inspired from [sd-webui-animatediff](https://github.com/continue-revolution/sd-webui-animatediff) and [sd-webui-controlnet
 ](https://github.com/Mikubill/sd-webui-controlnet).
@@ -106,6 +123,8 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 - Fix for multiple SD instandces. It reads `--port` instead of hardcoded `http://127.0.0.1:7860`.
 
 - **Rearrange the UI components.** It is so raw and confusing.
+
+- **TODO** Merge the info to the `__metadata__` inside the model: [How the original Checkpoint Merger does](https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/modules/extras.py#L257)
 
 ## This is part of my research.
 
