@@ -72,6 +72,10 @@ Traceback (most recent call last):
 h11._util.LocalProtocolError: Can't send data when our state is ERROR
 ```
 
+- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT.
+
+![docs/recover_from_log.JPG](docs/recover_from_log.JPG)
+
 ## Observations and explanations of parameters
 
 - For "Search Type A" and "Search Type B", they are related "Opt (A to B)" for switching streadgy in runtime. *By default it is solely using Type A*.
@@ -80,7 +84,7 @@ h11._util.LocalProtocolError: Can't send data when our state is ERROR
 
 - **"Force CPU" is forced on.** I see `RuntimeError: expected device cuda:0 but got device cpu` if it is off ~~and it is a headache to trace and move all tensors.~~
 
-- **"Test Intervals" upper range is raised to 10000.** Using 20+ for `BayseianOptimizer`` will raise `ValueError: broadcast dimensions too large.` already ([np.meshgrid](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L103)). I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
+- **"Test Intervals" upper range is raised to 10000.** Using 20+ for `BayseianOptimizer` will raise `ValueError: broadcast dimensions too large.` already ([np.meshgrid](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L103)). I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
 
 ```py
 all_pos_comb = np.array(np.meshgrid(*pos_space)).T.reshape(-1, n_dim)
@@ -91,6 +95,14 @@ all_pos_comb = np.array(np.meshgrid(*pos_space)).T.reshape(-1, n_dim)
         search_space.update({str(idx): [*np.round(np.linspace(args[clamp_lower[idx]], args[clamp_upper[idx]], num=args[pass_params["sl_test_interval"]]+1), 8)]})
     else:
         search_space.update({str(idx): [*np.round(np.linspace(lower, upper, num=args[pass_params["sl_test_interval"]]+1), 8)]})
+```
+
+- After serval actual runs, *unfourtunately 20 intervals still occasionally throws the same error while performing `meshgrid`*, meanwhile it takes 2-3 time longer to complete an iterlation, and it is also 2-3 times harder to converge. **"Test Intervals" default will be stayed at 10.** These are the optimizers using `meshgrid`:
+
+```txt
+LipschitzOptimizer
+BayesianOptimizer
+ForestOptimizer
 ```
 
 - **Keep "Test Grouping" as 1.** I don't know why we need to repeat the parameters. [Is it related to supersampling?](https://en.wikipedia.org/wiki/Supersampling)
@@ -125,6 +137,13 @@ all_pos_comb = np.array(np.meshgrid(*pos_space)).T.reshape(-1, n_dim)
 - **Rearrange the UI components.** It is so raw and confusing.
 
 - **TODO** Merge the info to the `__metadata__` inside the model: [How the original Checkpoint Merger does](https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/modules/extras.py#L257)
+
+```py
+# TODO
+# final save function
+def save_checkpoint():
+    # inject to metadata
+```
 
 ## This is part of my research.
 

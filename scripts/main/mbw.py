@@ -160,7 +160,7 @@ def on_ui_tabs(main_block):
                             sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                             sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_1 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
+                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
                         with gr.Column():
                             sl_initialize_grid_1 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_1 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -188,7 +188,7 @@ def on_ui_tabs(main_block):
                             sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                             sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_2 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
+                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
                         with gr.Column():
                             sl_initialize_grid_2 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_2 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -220,7 +220,7 @@ def on_ui_tabs(main_block):
                             sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
                             sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
                             sl_test_grouping_3 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
+                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
                         with gr.Column():
                             sl_initialize_grid_3 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_3 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
