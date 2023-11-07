@@ -146,7 +146,7 @@ def on_ui_tabs(main_block):
                             payloads_1 = gr.Dropdown(label="Payloads", choices=discovered_payloads, multiselect=True, elem_id="autombw_payloads_1")
                         with gr.Column():
                             chk_enable_early_stop_1 = gr.Checkbox(label="Early Stop", value=True)
-                            sl_n_iter_no_change_1 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=25, interactive=True)           
+                            sl_n_iter_no_change_1 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=27, interactive=True)           
                             sl_tol_abs_1 = gr.Slider(label="Absolute Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=True)
                             sl_tol_rel_1 = gr.Slider(label="Relative Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=True)
                     with gr.Row():
@@ -157,10 +157,10 @@ def on_ui_tabs(main_block):
                             dropdown_classifiers_1 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_1")
                             dropdown_tally_type_1 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_1")
                         with gr.Column():
-                            sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
+                            sl_search_iterations_1 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=270)
+                            sl_search_time_1 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=2880)
                             sl_test_grouping_1 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
+                            sl_test_interval_1 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_1 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_1 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -185,10 +185,10 @@ def on_ui_tabs(main_block):
                             dropdown_classifiers_2 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_2")
                             dropdown_tally_type_2 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_2")
                         with gr.Column():
-                            sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
+                            sl_search_iterations_2 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=270)
+                            sl_search_time_2 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=2880)
                             sl_test_grouping_2 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
+                            sl_test_interval_2 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_2 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_2 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -196,7 +196,7 @@ def on_ui_tabs(main_block):
                             chk_warm_start_2 = gr.Checkbox(label="Warm Start", value=True)
                         with gr.Column():
                             chk_enable_early_stop_2 = gr.Checkbox(label="Early Stop", value=False)
-                            sl_n_iter_no_change_2 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=25, interactive=False)
+                            sl_n_iter_no_change_2 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=27, interactive=False)
                             sl_tol_abs_2 = gr.Slider(label="Absolute Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
                             sl_tol_rel_2 = gr.Slider(label="Relative Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
         with gr.Row(variant="panel"):
@@ -217,10 +217,10 @@ def on_ui_tabs(main_block):
                             dropdown_classifiers_3 = gr.Dropdown(label='Image Classifier', choices=[*discovered_plugins.keys()], value=[*discovered_plugins.keys()][IMAGE_REWARD_INDEX], elem_id="autombw_classifiers_3")
                             dropdown_tally_type_3 = gr.Dropdown(label="Tally Type", choices=tally_types, value=tally_types[ARITHMETIC_MEAN_INDEX], elem_id="autombw_tally_type_3")
                         with gr.Column():
-                            sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=250)
-                            sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=10000)
+                            sl_search_iterations_3 = gr.Slider(label="Search Iterations", minimum=10, maximum=1000, step=1, value=270)
+                            sl_search_time_3 = gr.Slider(label="Search Time (min)", minimum=1, maximum=10000, step=1, value=2880)
                             sl_test_grouping_3 = gr.Slider(label="Test Grouping", minimum=1, maximum=4, step=1, value=1)
-                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=10)
+                            sl_test_interval_3 = gr.Slider(label="Test Intervals", minimum=1, maximum=10000, step=1, value=20)
                         with gr.Column():
                             sl_initialize_grid_3 = gr.Slider(label="Initialize Points [grid]", minimum=0, maximum=50, step=1, value=4)
                             sl_initialize_vertices_3 = gr.Slider(label="Initialize Points [vertices]", minimum=0, maximum=50, step=1, value=4)
@@ -228,7 +228,7 @@ def on_ui_tabs(main_block):
                             chk_warm_start_3 = gr.Checkbox(label="Warm Start", value=True)
                         with gr.Column():
                             chk_enable_early_stop_3 = gr.Checkbox(label="Early Stop", value=False)
-                            sl_n_iter_no_change_3 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=25, interactive=False)
+                            sl_n_iter_no_change_3 = gr.Slider(label="Iterations Tolerance", minimum=0, maximum=1000, step=1, value=27, interactive=False)
                             sl_tol_abs_3 = gr.Slider(label="Absolute Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
                             sl_tol_rel_3 = gr.Slider(label="Relative Tolerance", minimum=0.0, maximum=1.0, step=0.0001, value=0, interactive=False)
         with gr.Row(variant="panel"):

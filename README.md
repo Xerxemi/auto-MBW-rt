@@ -123,7 +123,7 @@ ForestOptimizer
 
 - Clamping / LoRA is untouched. I only moved the UI components to reduce some area. 
 
-- "Early Stop" is enabled with parameters untouched. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is reasonable.
+- "Early Stop" is enabled with parameters is slighty raise to 27, which is parameter counts. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is also raised to 270 (expect 10 intervals).
 
 - **Search Time is greatly increased to 10000 minutes (around 7 days).** It was 2880 minutes (2 days). I have found that my prefered payloads (12 payloads x 1 image) takes longer then 2 days for worst case (expected 12 hours). It is comparable to common SD / LoRA finetuning, but computational power is still minimum (only t2i).
 
