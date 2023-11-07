@@ -255,13 +255,7 @@ def on_ui_tabs(main_block):
                                             cu_test_base = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="CU Base", value=1, interactive=False)
                                         chk_enable_shared_memory = gr.Checkbox(label="Pass Shared Memory (requires consistent pass params)", value=False)
                                         experimental_range_checkbox = gr.Checkbox(label='Enable Experimental Range', value=False)
-                                        with gr.Row(variant="panel"): 
-                                            chk_enable_clamping = gr.Checkbox(label="Search Space Clamping", value=False)
-                                            chk_TIME_EMBED = gr.Checkbox(label="TIME_EMBED", value=True, elem_id="autombw_time_embed", interactive=False)
-                                            with gr.Column(variant="compact"):
-                                                sl_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="TIME_EMBED", value=0, elem_id="autombw_time_embed_sl", interactive=False)
-                                                cl_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="CL_TIME_EMBED", value=0, elem_id="autombw_time_embed_cl", interactive=False)
-                                                cu_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="CU_TIME_EMBED", value=1, elem_id="autombw_time_embed_cu", interactive=False)
+                                        chk_enable_clamping = gr.Checkbox(label="Search Space Clamping", value=False)
                                         chk_enable_lora_merging = gr.Checkbox(label="LoRA Merging", value=False)
                                         chk_enable_multi_merge_twostep = gr.Checkbox(label="Multi Merge Twostep", value=False)
                             with gr.Column():
@@ -276,6 +270,13 @@ def on_ui_tabs(main_block):
         with gr.Accordion(label = "Warm Up Parameters (MBW, shared for P1 / P2 / P3)", open = False):
             with gr.Column():                  
                 with gr.Row():
+                    with gr.Column():
+                        with gr.Row(variant="panel"):
+                            chk_TIME_EMBED = gr.Checkbox(label="TIME_EMBED", value=True, elem_id="autombw_time_embed", interactive=True)
+                            with gr.Column(variant="compact"):
+                                sl_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="TIME_EMBED", value=0, elem_id="autombw_time_embed_sl", interactive=True)
+                                cl_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="CL_TIME_EMBED", value=0, elem_id="autombw_time_embed_cl", interactive=False)
+                                cu_TIME_EMBED = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label="CU_TIME_EMBED", value=1, elem_id="autombw_time_embed_cu", interactive=False)
                     with gr.Column():
                         with gr.Row(variant="panel"):
                             chk_M_00 = gr.Checkbox(label="M00", value=True, elem_id="autombw_m00")
