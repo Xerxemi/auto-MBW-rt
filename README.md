@@ -10,7 +10,7 @@
 
 1. Install these extensions via "Extensions" > "Install from URL":
 
-- [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge)
+- [~~sd-webui-runtime-block-merge~~](https://github.com/Xynonners/sd-webui-runtime-block-merge),  [my fork instead](https://github.com/6DammK9/sd-webui-runtime-block-merge)
 
 - [sd-webui-lora-block-weight](https://github.com/hako-mikan/sd-webui-lora-block-weight)
 
@@ -72,7 +72,7 @@ Traceback (most recent call last):
 h11._util.LocalProtocolError: Can't send data when our state is ERROR
 ```
 
-- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT.
+- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Fixed in my fork. Swap it back if using my fork.*
 
 ![docs/recover_from_log.JPG](docs/recover_from_log.JPG)
 
@@ -135,15 +135,6 @@ ForestOptimizer
 - Fix for multiple SD instandces. It reads `--port` instead of hardcoded `http://127.0.0.1:7860`.
 
 - **Rearrange the UI components.** It is so raw and confusing.
-
-- **TODO** Merge the info to the `__metadata__` inside the model: [How the original Checkpoint Merger does](https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/modules/extras.py#L257)
-
-```py
-# TODO
-# final save function
-def save_checkpoint():
-    # inject to metadata
-```
 
 ## This is part of my research.
 
