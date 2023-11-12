@@ -512,8 +512,12 @@ def on_ui_tabs(main_block):
                 if args[pass_params["enabled"]] and args[pass_params["payloads"]] != None and args[pass_params["payloads"]] != []:
                     passes = passes + 1
                 else:
-                    logger.warning("No payloads detected. It will exit early.")
+                    # No payloads in current pass (P1 / P2 / P3)
                     break
+                
+            logger.info(f"{passes} passes detected.")
+            if passes == 0:
+                logger.warning("No payloads detected. It will exit early.")
 
             for idx, (model_A, model_B, model_O) in enumerate(zip(multi_model_A, multi_model_B, multi_model_O)):
 
