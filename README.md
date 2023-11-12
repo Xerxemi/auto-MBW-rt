@@ -76,6 +76,8 @@ h11._util.LocalProtocolError: Can't send data when our state is ERROR
 
 ![docs/recover_from_log.JPG](docs/recover_from_log.JPG)
 
+- (Related to the previous error), if you see the `hyper_score` is reporting the **same score with wrong iterlation count** (e.g. always 0.529 with iter 1, 2, 4, 8 etc.), the merge already failed, and you should restart the WebUI. I have found that it is usually caused by Model A / B are same as the WebUI's selected model. I have added checking about this issue.
+
 ## Observations and explanations of parameters
 
 - For "Search Type A" and "Search Type B", they are related "Opt (A to B)" for switching streadgy in runtime. *By default it is solely using Type A*.

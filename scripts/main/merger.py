@@ -49,9 +49,17 @@ def handle_model_load(modelA, modelB, force_cpu_checkbox, slALL, lora=False):
     return modelA, modelB
 
 def disable_injection():
-    shared.UNetBManager.restore_original_unet()
-    shared.UNetBManager.unload_all()
-    shared.UNBMSettingsInjector.enabled = False
+    if shared.UNBMSettingsInjector.enabled:
+        logger.info("Disable injection.")
+        try: 
+            shared.UNetBManager.restore_original_unet()
+            shared.UNetBManager.unload_all()
+            shared.UNBMSettingsInjector.enabled = False
+        except Exception as e:
+            logger.error(e)
+            logger.error("Disable injection failed. Recommended to restart WebUI.")
+    else:
+        logger.info("Disable injection skipped: Injection is not activated.")
 
 lora_disabled = [0, 3, 6, 9, 10, 11, 13, 14, 15, 16, 26]
 # helper func for sl_NAT to lora weight conversion
@@ -174,6 +182,7 @@ lora_blocks = [
 
 # final save function
 def save_checkpoint(output_mode_radio, position_id_fix_radio, output_format_radio, save_checkpoint_name, output_recipe_checkbox, weights, modelA, modelB, lora=False):
+    logger.info(f"Saving checkpoint to ${save_checkpoint_name}")
     if lora:
         _weights_lora = ','.join([str(i) for i in lora_conv(weights)])
         savesets = ["overwrite"]

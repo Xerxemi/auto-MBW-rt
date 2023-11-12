@@ -2,6 +2,7 @@ import os  #, sys, gc, pdb
 # import re
 # import statistics
 # import random
+from pathlib import Path
 import datetime
 import numpy as np
 import gradio as gr
@@ -236,7 +237,7 @@ def on_ui_tabs(main_block):
                 with gr.Row():
                     with gr.Column():
                         with gr.Accordion(label = "Gallery [enabled]" if shared.cmd_opts.gradio_queue else "Gallery [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
-                            gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=0.5, elem_id="autombw_gallery", columns=4, height=1024, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
+                            gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=30, elem_id="autombw_gallery", columns=4, height=1024, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
                     with gr.Column():
                         txt_multi_merge = gr.Text(label="Multi Merge CMD", lines=6)
                         txt_block_weight = gr.Text(label="Weight Values (_nat)", placeholder="Put weight sets. float number x 27")
@@ -266,7 +267,7 @@ def on_ui_tabs(main_block):
                                 output_recipe_checkbox = gr.Checkbox(label="Output Recipe", value=True, interactive=True)
                 with gr.Row():
                     with gr.Accordion(label = "UNET Visualizer [enabled]" if shared.cmd_opts.gradio_queue else "UNET Visualizer [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
-                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=0.5, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
+                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=30, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
         with gr.Accordion(label = "Warm Up Parameters (MBW, shared for P1 / P2 / P3)", open = False):
             with gr.Column():                  
                 with gr.Row():
@@ -421,6 +422,14 @@ def on_ui_tabs(main_block):
 
             logger.info("#### AutoMBW - V2 ####")
 
+            logger.debug("Validating inputs")
+            if Path(shared.sd_model.sd_model_checkpoint).name in model_A:
+                raise Exception("To prevent runtime error, Model A and Model B cannot be WebUI's selected model.")
+            if Path(shared.sd_model.sd_model_checkpoint).name in model_B:
+                raise Exception("To prevent runtime error, Model A and Model B cannot be WebUI's selected model.")
+            if model_A == model_B:
+                logger.warning("Model A is same as Model B.")
+
             #parsing multi merge txt block
             multi_model_A = []
             multi_model_B = []
@@ -503,6 +512,7 @@ def on_ui_tabs(main_block):
                 if args[pass_params["enabled"]] and args[pass_params["payloads"]] != None and args[pass_params["payloads"]] != []:
                     passes = passes + 1
                 else:
+                    logger.warning("No payloads detected. It will exit early.")
                     break
 
             for idx, (model_A, model_B, model_O) in enumerate(zip(multi_model_A, multi_model_B, multi_model_O)):
@@ -645,14 +655,16 @@ def on_ui_tabs(main_block):
 
             logger.info("merge completed.")
             return gr.update(value="merge completed.<br>")
-        except:
-            raise
+        except Exception as e:
+            logger.error(e, exc_info=True)
+            logger.info("Error received. Process will exit early.")
+            # raise will make WebUI no longer functional. Try to exit gracefully.
+            #raise
         finally:
             if lora:
                 logger.info("LoRA does not use injection - skipping injection disable.")
             else:
                 disable_injection()
-                logger.info("injection disabled (hopefully).")
 
 
     btn_do_mbw.click(
