@@ -182,7 +182,7 @@ lora_blocks = [
 
 # final save function
 def save_checkpoint(output_mode_radio, position_id_fix_radio, output_format_radio, save_checkpoint_name, output_recipe_checkbox, weights, modelA, modelB, lora=False):
-    logger.info(f"Saving checkpoint to ${save_checkpoint_name}")
+    logger.info(f"Saving checkpoint to {save_checkpoint_name}")
     if lora:
         _weights_lora = ','.join([str(i) for i in lora_conv(weights)])
         savesets = ["overwrite"]
