@@ -63,7 +63,7 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 ### Encountered errors that I cannot solve (limitation)
 
-- Currently I am experiencing Error when updating the "UNET Visualizer" and "Gallery". It is deep into Gradio's Queue and I am unable to fix it. However before it throws error, I can see live update. Since it is not fatal crash, I'll leave it open and ignore this issue.
+- Currently I am experiencing Error when updating the "UNET Visualizer" and "Gallery". It is deep into Gradio's Queue and I am unable to fix it. However before it throws error, I can see live update. Since it is not fatal crash, I'll leave it open and ignore this issue. I have found that `every=0.5` or `10` or `30` will throw this error, but `None` will not, however no preview will be shown. Currently I choose `every=None`, maybe I will make it configurable and let user guess it (tied with image generation time?)
 
 ```txt
 ERROR:    Exception in ASGI application
@@ -128,6 +128,10 @@ ForestOptimizer
 - "Early Stop" is enabled with parameters is slighty raise to 27, which is parameter counts. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is also raised to 270 (expect 10 intervals).
 
 - **Search Time is greatly increased to 10000 minutes (around 7 days).** It was 2880 minutes (2 days). I have found that my prefered payloads (12 payloads x 1 image) takes longer then 2 days for worst case (expected 12 hours). It is comparable to common SD / LoRA finetuning, but computational power is still minimum (only t2i).
+
+## Bonus: Visualizing the RL effect 
+
+- [See this notebook I've made](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch05/autombw/plot_rl.ipynb). Transfer the files from `csv/history/[long_folder_name]/[long_file_name].csv` to anywhere you want, and then change the path in the notebook (`csv_files = glob.glob("[your_folder]/*.csv")`), and also rename the csv as `id-[long_file_name].csv` and execute the notebook. It is similar to the legit training process while finetuning, but the y-axis is inverted, because [loss function](https://en.wikipedia.org/wiki/Loss_function) is *usually* opposite to [reward function](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo). [See this article for comparasion.](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo)
 
 ## Change Log 
 

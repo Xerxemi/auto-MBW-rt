@@ -237,7 +237,7 @@ def on_ui_tabs(main_block):
                 with gr.Row():
                     with gr.Column():
                         with gr.Accordion(label = "Gallery [enabled]" if shared.cmd_opts.gradio_queue else "Gallery [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
-                            gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=30, elem_id="autombw_gallery", columns=4, height=1024, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
+                            gallery_display_images = gr.Gallery(label="Gallery [enabled]", value=get_display_images, every=None, elem_id="autombw_gallery", columns=4, height=1024, container=True) if shared.cmd_opts.gradio_queue else gr.Gallery(label="Gallery [disabled]", elem_id="autombw_gallery", columns=4, height=2048)
                     with gr.Column():
                         txt_multi_merge = gr.Text(label="Multi Merge CMD", lines=6)
                         txt_block_weight = gr.Text(label="Weight Values (_nat)", placeholder="Put weight sets. float number x 27")
@@ -267,7 +267,7 @@ def on_ui_tabs(main_block):
                                 output_recipe_checkbox = gr.Checkbox(label="Output Recipe", value=True, interactive=True)
                 with gr.Row():
                     with gr.Accordion(label = "UNET Visualizer [enabled]" if shared.cmd_opts.gradio_queue else "UNET Visualizer [disabled]", open = True if shared.cmd_opts.gradio_queue else False):
-                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=30, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
+                        image_display_unet = gr.HTML(label="UNET Visualizer [enabled]", value=get_display_unet, every=None, elem_id="autombw_unet_vis") if shared.cmd_opts.gradio_queue else gr.HTML(label="UNET Visualizer [disabled]", elem_id="autombw_unet_vis")
         with gr.Accordion(label = "Warm Up Parameters (MBW, shared for P1 / P2 / P3)", open = False):
             with gr.Column():                  
                 with gr.Row():
@@ -514,7 +514,7 @@ def on_ui_tabs(main_block):
                 else:
                     # No payloads in current pass (P1 / P2 / P3)
                     break
-                
+
             logger.info(f"{passes} passes detected.")
             if passes == 0:
                 logger.warning("No payloads detected. It will exit early.")
