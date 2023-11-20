@@ -6,6 +6,8 @@
 
 - Also I do not gruntee to have any decent test coverage. Check out [this extension](https://github.com/s1dlx/sd-webui-bayesian-merger) which is doing what I'm aiming for (but it doesn't include ImageReward, and code is older).
 
+- See [my own findings in AutoMBW.](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch01/autombw.md). Contents will not overlap.
+
 ## Install prerequisites
 
 1. Install these extensions via "Extensions" > "Install from URL":
@@ -72,9 +74,17 @@ Traceback (most recent call last):
 h11._util.LocalProtocolError: Can't send data when our state is ERROR
 ```
 
-- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Fixed in my fork. Swap it back if using my fork.*
+- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Fixed in my fork. Swap TIME_EMBED and OUT if using my fork.*
 
 ![docs/recover_from_log.JPG](docs/recover_from_log.JPG)
+
+- If you want to continue the training as [warm start](https://www.determined.ai/blog/warm-starting-deep-learning), make sure **grid = vertices = random = 0**. Then input the "Warm Up Parameters" in sequence as IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Same as above. Swap TIME_EMBED and OUT if using my fork.* See [the receipe with console output](docs/15b-AstolfoMix-08b09b.recipe.txt), [the generated csv](docs/15b-AstolfoMix-08b09b-0-2023-11-21-12-16AM-36.csv) and compare with the [FULL screenshot (TIME_EMBED and OUT swapped)](docs/continue_as_warmstart.JPG). **The console log should align to the CSV, instead of the content in receipe.**
+
+```
+testweights: 0.4,0.9,0.5,0.6,0.5,0.0,0.9,0.9,1.0,0.4,0.3,0.8,0.3,1.0,0.9,0.6,0.8,0.9,0.7,0.6,1.0,0.9,0.6,0.7,0.3,0.6,0.0
+...
+0.4,0.9,0.5,0.6,0.5,0.0,0.9,0.9,1.0,0.4,0.3,0.8,0.3,1.0,0.9,0.6,0.8,0.9,0.7,0.6,1.0,0.9,0.6,0.7,0.3,0.6,0.0,0.6132534303822829,174590.83615255356,174624.89337921143
+```
 
 - (Related to the previous error), if you see the `hyper_score` is reporting the **same score with wrong iterlation count** (e.g. always 0.529 with iter 1, 2, 4, 8 etc.), the merge already failed, and you should restart the WebUI. I have found that it is usually caused by Model A / B are same as the WebUI's selected model. I have added checking about this issue.
 
@@ -121,7 +131,7 @@ ForestOptimizer
 
 - **Initialize Grid / Vertex / Random should be ignored.** It is only useful if you are dedicated to search from the extreme ratios first (pure A by experience). Also the search parameters are way too much (24 + 2 in total). *It will waste so much time.*
 
-- **"Warm Start" will be disabled.** It means "Read the parameters from the input for initialization", with the 26 slidebars provided. Disable for random initialization (common for DNN training).
+- **"Warm Start" will be disabled.** It will use hyperactive's API for initialization, and then "Read the parameters from the input of the 26 slidebars in page bottom", if grid = vertices = random = 0. Disable for random initialization (common for DNN training).
 
 - Clamping / LoRA is untouched. I only moved the UI components to reduce some area. 
 
