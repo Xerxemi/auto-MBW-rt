@@ -54,3 +54,10 @@ Results: 'hyper_score'
 2023-11-21 00:16:42,189 - MBWrt - INFO - Checkpoint saved to E:\NOVELAI\stable-diffusion-webui\stable-diffusion-webui\models\Stable-diffusion\15b-AstolfoMix-08b09b.safetensors.
 2023-11-21 00:16:42,321 - AutoMBWrt - INFO - merge completed.
 2023-11-21 00:16:42,321 - AutoMBWrt - INFO - Disable injection.
+
+[0] hyper_score (Bayesian Optimization):   0%|                                    | 0/270 [00:00<?, ?it/s]2023-11-21 01:27:27,668 - AutoMBWrt - INFO - testweights: 0.4,0.9,0.5,0.6,0.5,0.0,0.9,0.9,1.0,0.4,0.3,0.8,0.3,1.0,0.9,0.6,0.8,0.9,0.7,0.6,1.0,0.9,0.6,0.7,0.3,0.6,0.0
+2023-11-21 02:02:24,217 - AutoMBWrt - DEBUG - <Response [200]>████████████| 96/96 [02:39<00:00,  3.00s/it] 
+load checkpoint from C:\Users\User/.cache/ImageReward\ImageReward.pt
+checkpoint loaded
+2023-11-21 02:02:40,953 - AutoMBWrt - INFO - test score: 0.6132534303822829
+[0] hyper_score (Bayesian Optimization):   0%| | 1/270 [35:13<157:54:39, 2113.31s/it, best_iter=0, best_po]
