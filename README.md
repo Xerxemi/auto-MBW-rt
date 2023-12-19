@@ -1,4 +1,4 @@
-# WebUI 1.6.0 fix on 231030 with install guide by 6DammK9
+# auto-MBW-rt extension by 6DammK9 (1.7.0 Tested)
 
 - *Only tested in Winodws a.k.a my machine.* I'm not [gradio](https://www.gradio.app/) / [webUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) expert therefore do not expect any auto / e2e solutions.
 
@@ -142,6 +142,12 @@ ForestOptimizer
 ## Bonus: Visualizing the RL effect 
 
 - [See this notebook I've made](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch05/autombw/plot_rl.ipynb). Transfer the files from `csv/history/[long_folder_name]/[long_file_name].csv` to anywhere you want, and then change the path in the notebook (`csv_files = glob.glob("[your_folder]/*.csv")`), and also rename the csv as `id-[long_file_name].csv` and execute the notebook. It is similar to the legit training process while finetuning, but the y-axis is inverted, because [loss function](https://en.wikipedia.org/wiki/Loss_function) is *usually* opposite to [reward function](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo). [See this article for comparasion.](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo)
+
+## Bonus: Mimic "Add diff"
+
+- [Referring this artistic session](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch05/README.MD#findings-on-astolfomix-21b).
+
+- *autombw once more with the "average weight" of your merge model.* 
 
 ## Change Log 
 
