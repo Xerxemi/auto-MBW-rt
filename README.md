@@ -1,12 +1,22 @@
 # auto-MBW-rt extension by 6DammK9 (1.7.0 Tested)
 
-- *Only tested in Winodws a.k.a my machine.* I'm not [gradio](https://www.gradio.app/) / [webUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) expert therefore do not expect any auto / e2e solutions.
+- *Only tested in Winodws a.k.a my machine.* I'm not [gradio](https://www.gradio.app/) / [webUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) expert therefore do not expect any auto / e2e solutions. Also I do not gruntee to have any decent test coverage. 
+
+- Currently SD1 and SD2 are tested. SDXL is not tested. *BTW you cannot merge different UNET architecture. Check out model versions first.*
 
 - **NO SUPPORT FOR aki / "秋葉" build.**
 
-- Also I do not gruntee to have any decent test coverage. Check out [this extension](https://github.com/s1dlx/sd-webui-bayesian-merger) which is doing what I'm aiming for (but it doesn't include ImageReward, and code is older).
+- Check out [sd-webui-bayesian-merger](https://github.com/s1dlx/sd-webui-bayesian-merger) (along with [merger base code "meh"](https://github.com/s1dlx/meh)) which is doing what I'm aiming for, but it doesn't include ImageReward. [ljleb's fork is currently in active developement, and has a nice guide.](https://github.com/ljleb/sd-webui-bayesian-merger) [Nah the original 'sdweb-auto-MBW' is not brute force search, but a strange 'binary search', which is not effective or efficient.](https://github.com/Xerxemi/sdweb-auto-MBW/blob/master/scripts/mbw/auto_mbw.py)
 
-- See [my own findings in AutoMBW.](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch01/autombw.md). Contents will not overlap.
+- See [my own findings in AutoMBW.](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch01/autombw.md) [Now published to CivitAI also.](https://civitai.com/articles/3409/diagram-of-unet-and-exotic-merging-methods) Contents will not overlap.
+
+- Feel free to discuss in [this original thread](https://github.com/Xerxemi/auto-MBW-rt/issues/3), *or catch me in Discord / Telegram.*
+
+## Observed hardware requirements
+
+- Around 33.4GB of system RAM. Counted casually (loads of applications opened), will drop to 26.4GB after first iterlation. It is considered that model must be created in system RAM first, then *move* to GPU's VRAM.
+
+- `conda` ([miniconda](https://docs.conda.io/projects/miniconda/en/latest/)) for dependency, even A1111 has its own `venv`.
 
 ## Install prerequisites
 
@@ -14,7 +24,7 @@
 
 - [~~sd-webui-runtime-block-merge~~](https://github.com/Xynonners/sd-webui-runtime-block-merge),  [my fork instead](https://github.com/6DammK9/sd-webui-runtime-block-merge)
 
-- [sd-webui-lora-block-weight](https://github.com/hako-mikan/sd-webui-lora-block-weight)
+- [sd-webui-lora-block-weight](https://github.com/hako-mikan/sd-webui-lora-block-weight) **not tested**
 
 2. Install `dynamicprompts` via [wheels from pypi](https://pypi.org/project/dynamicprompts/#files):
 
@@ -140,6 +150,8 @@ ForestOptimizer
 - **Search Time is greatly increased to 10000 minutes (around 7 days).** It was 2880 minutes (2 days). I have found that my prefered payloads (12 payloads x 1 image) takes longer then 2 days for worst case (expected 12 hours). It is comparable to common SD / LoRA finetuning, but computational power is still minimum (only t2i).
 
 ## Bonus: Visualizing the RL effect 
+
+![rl_plot.png](https://raw.githubusercontent.com/6DammK9/nai-anime-pure-negative-prompt/main/ch05/img/rl_plot.png)
 
 - [See this notebook I've made](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch05/autombw/plot_rl.ipynb). Transfer the files from `csv/history/[long_folder_name]/[long_file_name].csv` to anywhere you want, and then change the path in the notebook (`csv_files = glob.glob("[your_folder]/*.csv")`), and also rename the csv as `id-[long_file_name].csv` and execute the notebook. It is similar to the legit training process while finetuning, but the y-axis is inverted, because [loss function](https://en.wikipedia.org/wiki/Loss_function) is *usually* opposite to [reward function](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo). [See this article for comparasion.](https://ai.stackexchange.com/questions/35023/what-is-the-difference-between-a-loss-function-and-reward-penalty-in-deep-reinfo)
 
