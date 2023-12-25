@@ -2,7 +2,11 @@
 
 - *Only tested in Winodws a.k.a my machine.* I'm not [gradio](https://www.gradio.app/) / [webUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) expert therefore do not expect any auto / e2e solutions. Also I do not gruntee to have any decent test coverage. 
 
-- Currently SD1 and SD2 are tested. SDXL is not tested. *BTW you cannot merge different UNET architecture. Check out model versions first.*
+- Currently SD1, SD2 and SDXL are tested. *You cannot merge different UNET architecture. Check out model versions first.*
+
+- You will see loads of `Missing key(s) in state_dict:` when the settings in A1111 is not correcly loaded. Keep switching *UI's selected model* to non SDXL models, and try again. If you see a `*.yaml` is loaded, it is usually success. Sadly it is done in A1111 instead of extensions.
+
+- See [the base merger](https://github.com/6DammK9/sd-webui-runtime-block-merge?tab=readme-ov-file#notes-on-merging-sdxl-models) for more details.
 
 - **NO SUPPORT FOR aki / "秋葉" build.**
 
@@ -148,6 +152,10 @@ ForestOptimizer
 - "Early Stop" is enabled with parameters is slighty raise to 27, which is parameter counts. It is a common setting for [Early stopping](https://en.wikipedia.org/wiki/Early_stopping). The iterlation count is also raised to 270 (expect 10 intervals).
 
 - **Search Time is greatly increased to 10000 minutes (around 7 days).** It was 2880 minutes (2 days). I have found that my prefered payloads (12 payloads x 1 image) takes longer then 2 days for worst case (expected 12 hours). It is comparable to common SD / LoRA finetuning, but computational power is still minimum (only t2i).
+
+## Bonus: Efficiency
+
+- [The efficiency is considered fast.](https://github.com/6DammK9/sd-webui-runtime-block-merge?tab=readme-ov-file#some-observation). `torch.lerp` greatly reduces overhead.
 
 ## Bonus: Visualizing the RL effect 
 

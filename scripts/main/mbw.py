@@ -624,12 +624,19 @@ def on_ui_tabs(main_block):
                     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%I-%M%p-%S")
                     folder_name = model_A +" - " + model_B
                     folder_path = os.path.join(history_path, folder_name)
+
+                    # Can exceed OS file path length limit, need handle.
                     try:
                         os.makedirs(folder_path)
-                    except FileExistsError:
-                        pass
-                    collector = SearchDataCollector(os.path.join(folder_path, f"{model_O}-{current_pass}-{timestamp}.csv"))
-                    collector.save(hyper.search_data(hyper_score, times=True))
+                        collector = SearchDataCollector(os.path.join(folder_path, f"{model_O}-{current_pass}-{timestamp}.csv"))
+                        collector.save(hyper.search_data(hyper_score, times=True))
+                    except:
+                        logger.warn('Error on exporting CSV, probably exceeding OS file path length limit, trying to save as result.csv...')
+                        try:
+                            collector = SearchDataCollector(os.path.join(history_path, "result.csv"))
+                            collector.save(hyper.search_data(hyper_score, times=True))
+                        except:
+                            logger.error('Error on exporting CSV again, no CSV will be produced.')
 
                     _weights = ','.join([str(i) for i in weights])
                     _cl_weights = ','.join([str(i) for i in cl_weights])
