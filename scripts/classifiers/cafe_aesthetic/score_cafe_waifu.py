@@ -4,9 +4,11 @@ import safetensors
 from transformers import CLIPModel, CLIPProcessor
 from scripts.classifiers.cafe_aesthetic.aesthetic import judge
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 def score(image, prompt="", reverse=False):
     _, _, waifu = judge(image)
     if reverse:
-        print("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
+        logger.warning("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
     return waifu["waifu"]
 

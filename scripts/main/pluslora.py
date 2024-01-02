@@ -7,6 +7,8 @@ from safetensors.torch import load_file, save_file
 
 from modules import sd_models #, shared
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 #dirty lora import
 # import importlib
 # lora = importlib.import_module("extensions-builtin.Lora.lora")
@@ -204,15 +206,15 @@ def savemodel(state_dict,currentmodel,fname,savesets,model_a,metadata={}):
     # check if output file already exists
     if os.path.isfile(fname) and not "overwrite" in savesets:
         _err_msg = f"Output file ({fname}) existed and was not saved]"
-        print(_err_msg)
+        logger.error(_err_msg)
         return _err_msg
 
-    print("Saving...")
+    logger.info("Saving...")
     if ext == ".safetensors":
         save_file(state_dict, fname, metadata=metadata)
     else:
         torch.save(state_dict, fname)
-    print("Done!")
+    logger.info("Done!")
     return "Merged model saved in "+fname
 
 LORABLOCKS=["encoder",
@@ -241,7 +243,7 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
     if lnames == "":
       return "ERROR: No LoRA Selected"
 
-    print("plus LoRA start")
+    logger.info("plus LoRA start")
     lnames = [lnames] if "," not in lnames else lnames.split(",")
 
     for i, n in enumerate(lnames):
@@ -277,7 +279,7 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
       dname = dname + "+"+n
 
     checkpoint_info = sd_models.get_closet_checkpoint_match(model)
-    print(f"Loading {model}")
+    logger.info(f"Loading {model}")
     theta_0 = sd_models.read_state_dict(checkpoint_info.filename,"cpu")
 
     keychanger = {}
@@ -287,10 +289,10 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
             keychanger[skey.split("model_",1)[1]] = key
 
     for name,filename, lwei in zip(names,filenames, lweis):
-      print(f"loading: {name}")
+      logger.info(f"loading: {name}")
       lora_sd = load_state_dict(filename, torch.float)
 
-      print("merging..." ,lwei)
+      logger.info("merging..." ,lwei)
       for key in lora_sd.keys():
         ratio = 1
 
@@ -306,7 +308,7 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
             up_key = key.replace("lora_down", "lora_up")
             alpha_key = key[:key.index("lora_down")] + 'alpha'
 
-            # print(f"apply {key} to {module}")
+            # logger.debug(f"apply {key} to lora {module}")
 
             down_weight = lora_sd[key].to(device="cpu")
             up_weight = lora_sd[up_key].to(device="cpu")
@@ -332,7 +334,7 @@ def pluslora(lnames,loraratios,settings,output,model,precision):
             else:
                 # conv2d 3x3
                 conved = torch.nn.functional.conv2d(down_weight.permute(1, 0, 2, 3), up_weight).permute(1, 0, 2, 3)
-                # print(conved.size(), weight.size(), module.stride, module.padding)
+                # logger.debug(conved.size(), weight.size(), module.stride, module.padding)
                 weight = weight + ratio * conved * scale
 
             theta_0[keychanger[msd_key]] = torch.nn.Parameter(weight)

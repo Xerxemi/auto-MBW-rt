@@ -6,6 +6,8 @@ import numpy as np
 import clip
 import os
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 state_name = "sa_0_4_vit_l_14_linear.pth"
 dirname = os.path.dirname(__file__)
 aesthetic_path = os.path.join(dirname, state_name)
@@ -44,6 +46,6 @@ def score(image, prompt="", reverse=False):
     image_features = get_image_features(image)
     score = predictor(torch.from_numpy(image_features).to(device).float())
     if reverse:
-        print("Reverse scoring currently not supported with this classifier. Are you sure you want to continue?")
+        logger.warning("Reverse scoring currently not supported with this classifier. Are you sure you want to continue?")
     return score.item()
 

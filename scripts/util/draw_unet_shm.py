@@ -24,5 +24,5 @@ if __name__ == '__main__':
 # draw_unet_path = os.path.abspath(draw_unet_shm.__file__)
 
 # unet_vis_out = subprocess.run([sys.executable, draw_unet_path, codecs.encode(pickle.dumps({"modelA": "A", "modelB": "B", "weights": slALL, "style": shared.UnetVisualizerStyle.pygal_style, "show_labels": shared.UnetVisualizerStyle.show_labels}), "base64").decode()], env={}, capture_output=True, text=True)
-# print(unet_vis_out.stderr)
+# logger.error(unet_vis_out.stderr)
 # unet_vis = pickle.loads(codecs.decode(unet_vis_out.stdout.encode(), "base64"))

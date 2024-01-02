@@ -29,6 +29,8 @@ from hyperactive.optimizers import (
 from modules import shared
 from modules.scripts import basedir
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 config_path = os.path.join(__location__, "settings", "optimizers.toml")
@@ -122,7 +124,7 @@ def on_ui_tabs(main_block):
             with open(config_path, "wb") as f:
                 f.write(config)
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return f"error: config failed to save to {config_path}.<br>"
         return f"success: config saved to {config_path}.<br>"
 
@@ -138,7 +140,7 @@ def on_ui_tabs(main_block):
                 settings.update({optimizer: optimizer_settings})
             shared.HyperOptimizers.regenerate_optimizers(settings)
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return f"error: config failed to apply from blocks.<br>"
         return f"success: config applied from blocks.<br>"
 
@@ -153,7 +155,7 @@ def on_ui_tabs(main_block):
                 setting_split = setting.split(seperator)
                 return_list.append(gr.update(value=settings[setting_split[0]][setting_split[1]]))
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return [f"error: config failed to load from {config_path}.<br>"] + setting_keys
         return [f"success: config loaded from {config_path}.<br>"] + return_list
 

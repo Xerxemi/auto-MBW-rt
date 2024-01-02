@@ -270,6 +270,6 @@ class DataPlot():
         data = chart.render(pretty_print=True)
         uri = 'data:image/svg+xml;charset=utf-8;base64,' + base64.b64encode(data).decode("utf-8")
         # after = time.time()
-        # print(after-before)
+        # logger.debug(after-before)
 
         return f'<img src="{uri}"/>', data
