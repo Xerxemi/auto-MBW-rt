@@ -110,6 +110,8 @@ testweights: 0.4,0.9,0.5,0.6,0.5,0.0,0.9,0.9,1.0,0.4,0.3,0.8,0.3,1.0,0.9,0.6,0.8
 
 - **"Force CPU" is forced on.** I see `RuntimeError: expected device cuda:0 but got device cpu` if it is off ~~and it is a headache to trace and move all tensors.~~
 
+- **Both upper limit of "Sampling steps" and "hires Sampling steps" are raised to 2048.** *SD's Traning step is 1000 and you can further extrapolate to infinity.* Now I use 256/64 frequently. Hence the extended range.
+
 - **"Test Intervals" upper range is raised to 10000.** Using 20+ for `BayseianOptimizer` will raise `ValueError: broadcast dimensions too large.` already ([np.meshgrid](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L103)). I was considering 10000 i.e. 4 DP. Unless you are doing exhausive Grid search, any search in relative scale desires for a fine space. Merge ratio is also in relative scale a.k.a fraction, which you don't need 1 DP if you are not required to remember the numbers (opposite of human search in MBW):
 
 ```py
