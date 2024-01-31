@@ -79,7 +79,7 @@ def main(weights):
     print(weights)
     print("weights_s:")
     print(weights_s) # sliders_in + [sl_M_00] + sliders_out + [sl_OUT] + [sl_TIME_EMBED] = !sl_ALL
-    on_save_checkpoint(*weights,*weights_s) # Merge is fine, receipe is bad.
+    on_save_checkpoint(*weights,*weights_s) # Merge is fine, recipe is bad.
 
 sliders = list(range(0,27))
 
@@ -88,8 +88,8 @@ print(sliders)
 
 main(sliders)
 
-print("Due to the receipe bug, you should swap OUT and TIME_EMBED on UI if you are reading the receipe.")
+print("Due to the recipe bug, you should swap OUT and TIME_EMBED on UI if you are reading the recipe.")
 
-actual_receipe = "0.35,0.05,1.0,0.7,0.35,0.75,0.7,1.0,0.95,0.65,0.9,0.05,0.45,0.4,0.4,0.3,1.0,0.5,0.7,0.8,0.6,0.95,0.55,0.45,0.2,1.0,0.2"
-print("Verify with Actual receipe: ")
-print(actual_receipe)
+actual_recipe = "0.35,0.05,1.0,0.7,0.35,0.75,0.7,1.0,0.95,0.65,0.9,0.05,0.45,0.4,0.4,0.3,1.0,0.5,0.7,0.8,0.6,0.95,0.55,0.45,0.2,1.0,0.2"
+print("Verify with Actual recipe: ")
+print(actual_recipe)

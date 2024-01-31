@@ -71,7 +71,7 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 
 - You may see ["Warning: training sequential model failed. Performing random iteration instead."](https://github.com/SimonBlanke/Gradient-Free-Optimizers/blob/master/gradient_free_optimizers/optimizers/smb_opt/smbo.py#L153) It means that the optimizer has nothing to initialize but pure random. Ignore this if you're going to start from random weights. 
 
-4. See `csv/history/*/*.csv` for results. Also see `models/Stable-diffusion/*.test-23110502.recipe.txt` for a formatted receipe.
+4. See `csv/history/*/*.csv` for results. Also see `models/Stable-diffusion/*.test-23110502.recipe.txt` for a formatted recipe.
 
 ## If you encounter errors
 
@@ -88,11 +88,11 @@ Traceback (most recent call last):
 h11._util.LocalProtocolError: Can't send data when our state is ERROR
 ```
 
-- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the receipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Fixed in my fork. Swap TIME_EMBED and OUT if using my fork.*
+- If the worst case happens a.k.a. program crash while merging after optimization, you will need to merge manually with the recipe (27 numbers, indexed from 0 to 26). **Since there is bug in [sd-webui-runtime-block-merge](https://github.com/Xynonners/sd-webui-runtime-block-merge), please refer the image below.** [PoC script.](docs/recover_from_log.py) tldr: IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Fixed in my fork. Swap TIME_EMBED and OUT if using my fork.*
 
 ![docs/recover_from_log.JPG](docs/recover_from_log.JPG)
 
-- If you want to continue the training as [warm start](https://www.determined.ai/blog/warm-starting-deep-learning), make sure **grid = vertices = random = 0**. Then input the "Warm Up Parameters" in sequence as IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Same as above. Swap TIME_EMBED and OUT if using my fork.* See [the receipe with console output](docs/15b-AstolfoMix-08b09b.recipe.txt), [the generated csv](docs/15b-AstolfoMix-08b09b-0-2023-11-21-12-16AM-36.csv) and compare with the [FULL screenshot (TIME_EMBED and OUT swapped)](docs/continue_as_warmstart.JPG). **The console log should align to the CSV, instead of the content in receipe.**
+- If you want to continue the training as [warm start](https://www.determined.ai/blog/warm-starting-deep-learning), make sure **grid = vertices = random = 0**. Then input the "Warm Up Parameters" in sequence as IN00-IN11, M00, TIME_EMBED, OUT00-OUT11, OUT. *Same as above. Swap TIME_EMBED and OUT if using my fork.* See [the recipe with console output](docs/15b-AstolfoMix-08b09b.recipe.txt), [the generated csv](docs/15b-AstolfoMix-08b09b-0-2023-11-21-12-16AM-36.csv) and compare with the [FULL screenshot (TIME_EMBED and OUT swapped)](docs/continue_as_warmstart.JPG). **The console log should align to the CSV, instead of the content in recipe.**
 
 ```
 testweights: 0.4,0.9,0.5,0.6,0.5,0.0,0.9,0.9,1.0,0.4,0.3,0.8,0.3,1.0,0.9,0.6,0.8,0.9,0.7,0.6,1.0,0.9,0.6,0.7,0.3,0.6,0.0
