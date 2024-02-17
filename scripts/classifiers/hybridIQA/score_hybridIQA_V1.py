@@ -4,6 +4,8 @@ import torchvision
 import scripts.classifiers.hybridIQA.models as models
 import numpy as np
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # state_name = "hyperIQA_hybrid_latest.pth"
 # dirname = os.path.dirname(__file__)
 # pth_path = os.path.join(dirname, state_name)
@@ -27,7 +29,7 @@ rng_reset = torch.get_rng_state()
 # random crop 25 patches and calculate mean quality score
 def score(image, prompt="", reverse=False):
     if reverse:
-        print("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
+        logger.warning("Reverse scoring not supported with this classifier. Are you sure you want to continue?")
     image = image.convert("RGB")
     pred_scores = []
     for i in range(25):

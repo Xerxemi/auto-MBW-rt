@@ -24,6 +24,8 @@ from pygal.style import (
 from modules import shared
 from modules.scripts import basedir
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 config_path = os.path.join(__location__, "settings", "unet_style.toml")
@@ -87,7 +89,7 @@ def on_ui_tabs(main_block):
             with open(config_path, "wb") as f:
                 f.write(config)
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return f"error: config failed to save to {config_path}.<br>"
         return f"success: config saved to {config_path}.<br>"
 
@@ -98,7 +100,7 @@ def on_ui_tabs(main_block):
             shared.UnetVisualizer.set_pygal_style(args[elements["dropdown_pygal_style"]])
             shared.UnetVisualizer.set_show_labels(args[elements["chk_unet_show_labels"]])
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return f"error: config failed to apply from blocks.<br>"
         return f"success: config applied from blocks.<br>"
 
@@ -112,7 +114,7 @@ def on_ui_tabs(main_block):
             for element_key in element_keys:
                 return_list.append(gr.update(value=settings[element_key]))
         except BaseException as e:
-            print("autoMBW [error]: " + repr(e))
+            logger.error("" + repr(e))
             return [f"error: config failed to load from {config_path}.<br>"] + element_keys
         return [f"success: config loaded from {config_path}.<br>"] + return_list
 

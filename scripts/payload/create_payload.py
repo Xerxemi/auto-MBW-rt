@@ -9,6 +9,8 @@ from modules import shared, processing, devices
 from modules.scripts import basedir
 from modules.sd_samplers import samplers
 
+from scripts.util.auto_mbw_rt_logger import logger_autombwrt as logger
+
 # __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 __location__ = basedir()
 payloads_path = os.path.join(__location__, "payloads")
@@ -22,7 +24,7 @@ def refresh_payloads():
             if os.path.splitext(f)[1] in [".json", ".msgpack", ".toml", ".yaml"]:
                 discovered_payloads.append(f)
     discovered_payloads = [*set(discovered_payloads)]
-    print("autoMBW [info]: discovered " + str(len(discovered_payloads)) + " payloads.")
+    logger.info("discovered " + str(len(discovered_payloads)) + " payloads.")
     return gr.update(choices=discovered_payloads)
 
 refresh_payloads()
@@ -31,7 +33,7 @@ def on_ui_tabs(main_block):
     def create_sampler_and_steps_selection(choices, tabname):
         with gr.Row(elem_id=f"sampler_selection_{tabname}"):
             sampler = gr.Dropdown(label='Sampling method', elem_id=f"{tabname}_sampling", choices=[x.name for x in choices], value=choices[0].name)
-            steps = gr.Slider(minimum=1, maximum=150, step=1, elem_id=f"{tabname}_steps", label="Sampling steps", value=20)
+            steps = gr.Slider(minimum=1, maximum=2048, step=1, elem_id=f"{tabname}_steps", label="Sampling steps", value=48)
         return steps, sampler
     with gr.Row():
         with gr.Column(variant="panel"):
@@ -61,8 +63,8 @@ def on_ui_tabs(main_block):
                         hr_final_resolution = gr.HTML(value="", elem_id="txtimg_hr_finalres", label="Upscaled resolution", interactive=False, visible=False)
             with gr.Row(elem_id="autombw_hires_fix_row1"):
                 hr_upscaler = gr.Dropdown(label="Upscaler", elem_id="autombw_hr_upscaler", choices=[*shared.latent_upscale_modes, *[x.name for x in shared.sd_upscalers]], value=shared.latent_upscale_default_mode, visible=False)
-                hr_second_pass_steps = gr.Slider(minimum=0, maximum=150, step=1, label='Hires steps', value=0, elem_id="autombw_hires_steps", visible=False)
-                denoising_strength = gr.Slider(minimum=0.0, maximum=1.0, step=0.01, label='Denoising strength', value=0.7, elem_id="autombw_denoising_strength", visible=False)
+                hr_second_pass_steps = gr.Slider(minimum=0, maximum=2048, step=1, label='Hires steps', value=0, elem_id="autombw_hires_steps", visible=False)
+                denoising_strength = gr.Slider(minimum=0.0, maximum=1.0, step=0.0001, label='Denoising strength', value=0.7, elem_id="autombw_denoising_strength", visible=False)
             with gr.Row(elem_id="autombw_hires_fix_row2"):
                 hr_scale = gr.Slider(minimum=1.0, maximum=4.0, step=0.05, label="Upscale by", value=2.0, elem_id="autombw_hr_scale", visible=False)
                 hr_resize_x = gr.Slider(minimum=0, maximum=2048, step=64, label="Resize width to", value=0, elem_id="autombw_hr_resize_x", visible=False)
@@ -110,10 +112,10 @@ def on_ui_tabs(main_block):
             with open(payload_path, "wb") as f:
                 f.write(payload)
             if args[chk_overwrite]:
-                print("warning [overwrite]: file already exists")
+                logger.warning("[overwrite]: file already exists")
                 return f"success: file overwritten [{payload_path}].<br>"
         else:
-            print("error: file already exists")
+            logger.error("Error: File already exists")
             return "error: file already exists.<br>"
         return f"success: file created [{payload_path}].<br>"
 
