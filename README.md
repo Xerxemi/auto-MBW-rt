@@ -1,4 +1,4 @@
-# auto-MBW-rt extension by 6DammK9 (1.7.0 Tested)
+# auto-MBW-rt extension by 6DammK9 (1.8.0 Tested)
 
 - *Only tested in Winodws a.k.a my machine.* I'm not [gradio](https://www.gradio.app/) / [webUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) expert therefore do not expect any auto / e2e solutions. Also I do not gruntee to have any decent test coverage. 
 
@@ -52,6 +52,17 @@ set COMMANDLINE_ARGS=--medvram --disable-safe-unpickle --deepdanbooru --xformers
 5. Install these extensions via "Extensions" > "Install from URL":
 
 - [Obviously this branch.](https://github.com/6DammK9/auto-MBW-rt)
+
+### Special notes on fresh installing Python / A1111
+
+- [Make sure you are using Python 3.10.](https://github.com/6DammK9/nai-anime-pure-negative-prompt/blob/main/ch04/local-install-env.md#python-312-is-proven-not-working-in-a1111-180)
+
+- `pip install -r requirements.txt` explicitly in this directory. I've seen `dynamicprompts` is failed to install along with A1111. Afterthat `pip` will throw some error but A1111 will start eventually.
+
+```log
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+gradio 3.41.2 requires huggingface-hub>=0.14.0, but you have huggingface-hub 0.13.4 which is incompatible.
+```
 
 ## Basic procedure
 
